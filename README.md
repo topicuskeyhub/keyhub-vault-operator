@@ -1,7 +1,7 @@
 ![Topicus KeyHub](assets/keyhub.png)
 
 # Topicus KeyHub Vault Operator
-Manage Kubernetes Secrets with Topicus KeyHub with a `KeyHubSecret` resource.
+Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 
 ## Documentation
 To learn more about using KeyHub as a Kubernetes secret store go to [this article](https://kb.topicus.education/docs/devops/kubernetes/keyhub/) in our Knowledge Base.
