@@ -5,7 +5,7 @@ config {
 
 def isMainBranch = env.BRANCH_NAME == 'main'
 def releaseTags = []
-if ( env.TAG_NAME.startsWith('v') ) {
+if ( env.TAG_NAME && env.TAG_NAME.startsWith('v') ) {
   releaseTags << env.TAG_NAME
 }
 
