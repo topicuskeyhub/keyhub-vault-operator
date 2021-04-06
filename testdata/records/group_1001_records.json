@@ -1,0 +1,111 @@
+{
+  "items": [
+    {
+      "uuid": "1001-0001",
+      "name": "KeyHub only",
+      "url": "",
+      "username": "",
+      "color": "RED",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ]
+    },
+    {
+      "uuid": "1001-0002",
+      "name": "Username + password",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    },
+    {
+      "uuid": "1001-0003",
+      "name": "Certificate",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    },
+    {
+      "uuid": "1001-0004",
+      "name": "Privatekey",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    },
+    {
+      "uuid": "1001-0005",
+      "name": "CA Certs",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    },
+    {
+      "uuid": "1001-0006",
+      "name": "PEM",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    },
+    {
+      "uuid": "1001-0007",
+      "name": "PEM WITH CHAIN",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        }
+      }
+    }
+  ]
+}

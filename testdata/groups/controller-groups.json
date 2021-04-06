@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "$type": "group.Group",
+      "links": [
+        {
+          "id": 1000,
+          "rel": "self",
+          "type": "group.Group",
+          "href": "https://keyhub.local/keyhub/rest/v1/group/1000"
+        }
+      ],
+      "uuid": "CTRL-1000",
+      "name": "Controller Policy Group"
+    }
+  ],
+  "segments": []
+}

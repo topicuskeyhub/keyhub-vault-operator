@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "$type": "group.Group",
+      "links": [
+        {
+          "id": 1001,
+          "rel": "self",
+          "type": "group.Group",
+          "href": "https://keyhub.local/keyhub/rest/v1/group/1001"
+        }
+      ],
+      "uuid": "GROUP-1001",
+      "name": "Group 1001"
+    }
+  ],
+  "segments": []
+}

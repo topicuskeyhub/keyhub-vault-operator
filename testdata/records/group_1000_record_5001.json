@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "uuid": "5001",
+      "name": "Controller Client 1",
+      "url": "",
+      "username": "CLIENT-0001",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "links": [
+        {
+          "id": 2,
+          "rel": "self",
+          "type": "vault.Record",
+          "href": "?"
+        }
+      ],
+      "additionalObjects": {
+        "secret": {
+          "password": "VERY_SECRET_CLIENT_KEY",
+          "comment": "policies:\n- type: namespace\n  name: default\n"          
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "uuid": "1000-5000",
+      "name": "Controller API Key",
+      "url": "",
+      "username": "",
+      "color": "RED",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ]
+    },
+    {
+      "uuid": "1000-5001",
+      "name": "Controller Client 1",
+      "url": "",
+      "username": "",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ]
+    }
+  ]
+}
