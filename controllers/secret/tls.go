@@ -49,7 +49,6 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 	}
 	if privateKey == nil && certificate == nil && caCerts == nil {
 		// no changes
-		fmt.Println("resetting secret statuses, no changes")
 		ks.Status.SecretKeyStatuses = []keyhubv1alpha1.SecretKeyStatus{}
 		return nil
 	}
@@ -101,7 +100,6 @@ func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStat
 		api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSPrivateKeyKey) ||
 			api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSCertKey)
 	if !recordChanged && !secretDataChanged {
-		fmt.Println("secret checks pass, no changes detected")
 		return nil, nil, nil, nil
 	}
 
