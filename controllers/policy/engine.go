@@ -16,6 +16,7 @@ import (
 
 type PolicyEngine interface {
 	GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.Client, error)
+	Flush()
 }
 
 type policyEngine struct {
@@ -40,7 +41,7 @@ func NewPolicyEngine(client client.Client, log logr.Logger, settingsMgr settings
 }
 
 func (pe *policyEngine) GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.Client, error) {
-	pe.log.Info("policy based client lookup", "KeyHubSecret", fmt.Sprintf("%s/%s", secret.Namespace, secret.Name))
+	pe.log.Info("Policy based client lookup", "KeyHubSecret", fmt.Sprintf("%s/%s", secret.Namespace, secret.Name))
 	policies, err := pe.policyCache.GetPolicies()
 	if err != nil {
 		return nil, err
@@ -51,7 +52,7 @@ func (pe *policyEngine) GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.
 		return nil, err
 	}
 
-	clientID := policy.credentials.ClientID
+	clientID := policy.Credentials.ClientID
 	client, found := pe.clientCache.Get(clientID)
 	if !found {
 		pe.mutex.Lock()
@@ -64,7 +65,7 @@ func (pe *policyEngine) GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.
 				return nil, err
 			}
 
-			client, err = keyhub.NewClient(http.DefaultClient, settings.URI, policy.credentials.ClientID, policy.credentials.ClientSecret)
+			client, err = keyhub.NewClient(http.DefaultClient, settings.URI, policy.Credentials.ClientID, policy.Credentials.ClientSecret)
 			if err != nil {
 				return nil, err
 			}
@@ -72,7 +73,7 @@ func (pe *policyEngine) GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.
 		}
 	}
 
-	pe.log.Info("found client with matching policy", "client", clientID)
+	pe.log.Info("Client with matching policy found", "client", clientID)
 
 	return client.(*keyhub.Client), nil
 }
@@ -85,4 +86,8 @@ func (pe *policyEngine) match(policies []Policy, secret *keyhubv1alpha1.KeyHubSe
 	)
 
 	return resolver.Resolve(secret)
+}
+
+func (pe *policyEngine) Flush() {
+	pe.policyCache.Flush()
 }

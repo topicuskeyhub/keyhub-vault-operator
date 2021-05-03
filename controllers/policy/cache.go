@@ -10,6 +10,7 @@ import (
 
 type PolicyCache interface {
 	GetPolicies() ([]Policy, error)
+	Flush()
 }
 
 type policyCache struct {
@@ -45,4 +46,8 @@ func (pc *policyCache) GetPolicies() ([]Policy, error) {
 		}
 	}
 	return policies.([]Policy), nil
+}
+
+func (pc *policyCache) Flush() {
+	pc.cache.Flush()
 }

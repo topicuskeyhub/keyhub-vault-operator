@@ -14,7 +14,7 @@ node() {
     git.checkout { }
 
     def img = dockerfile.build {
-      name = 'keyhub-vault-controller'
+      name = 'keyhub-vault-operator'
     }
     
     dockerfile.publish {

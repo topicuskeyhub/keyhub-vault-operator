@@ -1,6 +1,7 @@
 package secret
 
 import (
+	"fmt"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -11,23 +12,47 @@ import (
 )
 
 func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, secret *corev1.Secret) error {
-	// data := make(map[string][]byte)
-	// missing := false
-	sb.log.Info("opaque secret")
 	if secret.Data == nil {
 		secret.Data = make(map[string][]byte)
 	}
+
+	// Remove obsolete keys
+	keysToRemove := make(map[string]struct{})
+	recordStatusesToRemove := make(map[string]struct{})
+	for _, status := range ks.Status.SecretKeyStatuses {
+		keysToRemove[status.Key] = struct{}{}
+	}
+	for _, status := range ks.Status.VaultRecordStatuses {
+		recordStatusesToRemove[status.RecordID] = struct{}{}
+	}
+	for _, ref := range ks.Spec.Data {
+		delete(keysToRemove, ref.Name)
+		delete(recordStatusesToRemove, ref.Record)
+	}
+	for key := range keysToRemove {
+		delete(secret.Data, key)
+	}
+	ks.Status.SecretKeyStatuses = api.DeleteSecretKeyStatus(ks.Status.SecretKeyStatuses, keysToRemove)
+	for status := range recordStatusesToRemove {
+		ks.Status.VaultRecordStatuses = api.DeleteVaultRecordStatus(ks.Status.VaultRecordStatuses, status)
+	}
+
 	for _, ref := range ks.Spec.Data {
 		idxEntry, found := sb.records[ref.Record]
 		if !found {
 			sb.log.Info("record missing", "uuid", ref.Record)
+			// event?
 			continue
 		}
-		// if !ok {
-		// 	// event + err @ end
-		// 	continue
-		// 	// return fmt.Errorf("Record %s not found for key %s", ref.Record, ref.Name)
-		// }
+
+		// Check whether or not the Secret needs updating
+		recordChanged := api.IsVaulRecordChanged(ks.Status.VaultRecordStatuses, &idxEntry.Record)
+		secretDataChanged :=
+			api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, ref.Name)
+		if !recordChanged && !secretDataChanged {
+			fmt.Println("no changes detected", "key", ref.Name)
+			continue
+		}
 
 		record, err := sb.retriever.Get(idxEntry)
 		if err != nil {

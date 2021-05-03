@@ -3,6 +3,7 @@ package settings
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -14,8 +15,7 @@ import (
 )
 
 const (
-	// TODO: rename to keyhub-vault-operator-secret"
-	controllerSecret = "keyhub-secrets-controller-secret"
+	controllerSecret = "keyhub-vault-operator-secret"
 
 	settingsURI          = "uri"
 	settingsClientID     = "clientId"
@@ -45,8 +45,9 @@ func CreateSettingsManager(client client.Client, log logr.Logger) SettingsManage
 }
 
 func (mgr *settingsManager) GetSettings() (*ControllerSettings, error) {
-	mgr.log.Info("Reading settings")
-	key := types.NamespacedName{Namespace: getOperatorNamespace(), Name: controllerSecret}
+	operatorNamespace := getOperatorNamespace()
+	mgr.log.Info("Loading settings", "secret", fmt.Sprintf("%s/%s", operatorNamespace, controllerSecret))
+	key := types.NamespacedName{Namespace: operatorNamespace, Name: controllerSecret}
 	secret := &corev1.Secret{}
 	err := mgr.client.Get(context.TODO(), key, secret)
 	if err != nil {

@@ -31,6 +31,7 @@ import (
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -54,6 +55,8 @@ import (
 var cfg *rest.Config
 var k8sClient client.Client
 var testEnv *envtest.Environment
+var policyEngine policy.PolicyEngine
+var vaultIndexCache vault.VaultIndexCache
 
 func TestAPIs(t *testing.T) {
 	RegisterFailHandler(Fail)
@@ -90,13 +93,13 @@ var _ = BeforeSuite(func(done Done) {
 		ctrl.Log.WithName("SettingsManager"),
 	)
 
-	policyEngine := policy.NewPolicyEngine(
+	policyEngine = policy.NewPolicyEngine(
 		k8sManager.GetClient(),
 		ctrl.Log.WithName("PolicyEngine"),
 		settingsMgr,
 	)
 
-	vaultIndexCache := vault.NewVaultIndexCache(
+	vaultIndexCache = vault.NewVaultIndexCache(
 		ctrl.Log.WithName("VaultIndexCache"),
 	)
 
@@ -123,7 +126,7 @@ var _ = BeforeSuite(func(done Done) {
 
 	toCreate := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "keyhub-secrets-controller-secret",
+			Name:      "keyhub-vault-operator-secret",
 			Namespace: "default",
 		},
 		Data: map[string][]byte{
@@ -134,6 +137,18 @@ var _ = BeforeSuite(func(done Done) {
 	}
 
 	Expect(k8sClient.Create(context.Background(), toCreate)).Should(Succeed())
+
+	key := types.NamespacedName{
+		Name:      "keyhub-vault-operator-secret",
+		Namespace: "default",
+	}
+
+	fetched := &corev1.Secret{}
+	Eventually(func() bool {
+		k8sClient.Get(context.Background(), key, fetched)
+		return fetched.Type == corev1.SecretTypeOpaque &&
+			len(fetched.Data) == 3
+	}, 10, 1).Should(BeTrue())
 
 	close(done)
 }, 60)

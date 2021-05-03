@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "uuid": "1001-0008",
+      "name": "key file",
+      "url": "http://example.com",
+      "username": "superuser",
+      "color": "",
+      "filename": "",
+      "types": [
+        "vault.Record"
+      ],
+      "links": [
+        {
+          "id": 10010008,
+          "rel": "self",
+          "type": "vault.Record",
+          "href": "?"
+        }
+      ],
+      "additionalObjects": {
+        "audit": {
+          "lastModifiedAt": "2020-01-01T16:00:30Z"
+        },
+        "secret": {
+          "password": "test6789",
+          "file": "Y29uc2VjdGV0dXIgYWRpcGlzY2luZyBlbGl0"
+        }
+      }
+    }
+  ]
+}

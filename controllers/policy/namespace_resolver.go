@@ -30,7 +30,7 @@ func (r *policyResolver) Resolve(secret *keyhubv1alpha1.KeyHubSecret) (*Policy, 
 		}
 
 		if namespace == policy.Name {
-			r.log.Info("Found exact match", "namespace", namespace, "ClientID", policy.credentials.ClientID)
+			r.log.Info("Found exact match", "namespace", namespace, "ClientID", policy.Credentials.ClientID)
 			return &policy, nil
 		} else if policy.LabelSelector != "" {
 			nsl := &corev1.NamespaceList{}
@@ -47,12 +47,12 @@ func (r *policyResolver) Resolve(secret *keyhubv1alpha1.KeyHubSecret) (*Policy, 
 			for _, ns := range nsl.Items {
 				if ns.Name == namespace {
 					if matchedNamespaces < policyScore {
-						r.log.Info("Found match", "namespace", namespace, "ClientID", policy.credentials.ClientID, "score", matchedNamespaces)
+						r.log.Info("Found match", "namespace", namespace, "ClientID", policy.Credentials.ClientID, "score", matchedNamespaces)
 						policyScore = matchedNamespaces
 						matchedPolicy = policy
 						break
 					} else if matchedNamespaces == policyScore {
-						return nil, fmt.Errorf("Label selector '%s' matches namespace '%s' with the same score as label selector '%s'", policy.LabelSelector, namespace, matchedPolicy.LabelSelector)
+						return nil, fmt.Errorf("Policy for client '%s' with label selector '%s' matches namespace '%s' with the same score as the policy for client '%s' with label selector '%s'", policy.Credentials.ClientID, policy.LabelSelector, namespace, matchedPolicy.Credentials.ClientID, matchedPolicy.LabelSelector)
 					}
 				}
 			}

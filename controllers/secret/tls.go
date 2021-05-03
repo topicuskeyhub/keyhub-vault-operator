@@ -7,7 +7,6 @@ import (
 	"crypto/sha1"
 	"crypto/x509"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -41,15 +40,17 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 	var err error
 
 	if len(ks.Spec.Data) == 1 {
-		privateKey, certificate, caCerts, err = sb.loadCertificateBundle(&ks.Status, ks.Spec.Data[0])
+		privateKey, certificate, caCerts, err = sb.loadCertificateBundle(&ks.Status, ks.Spec.Data[0], secret.Data)
 	} else {
-		privateKey, certificate, caCerts, err = sb.loadCertificateBlocks(&ks.Status, ks.Spec.Data)
+		privateKey, certificate, caCerts, err = sb.loadCertificateBlocks(&ks.Status, ks.Spec.Data, secret.Data)
 	}
 	if err != nil {
 		return err
 	}
 	if privateKey == nil && certificate == nil && caCerts == nil {
 		// no changes
+		fmt.Println("resetting secret statuses, no changes")
+		ks.Status.SecretKeyStatuses = []keyhubv1alpha1.SecretKeyStatus{}
 		return nil
 	}
 
@@ -70,16 +71,21 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 
 	sb.applyRancherCertificateAnnotations(certificate, secret)
 
-	// 		err = api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, ref.Name, secret.Data[ref.Name])
-	// if err != nil {
-	// 	// event + err @ end
-	// 	continue
-	// }
+	err = api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, corev1.TLSCertKey, certBytes)
+	if err != nil {
+		// event + err @ end
+		return err
+	}
+	err = api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, corev1.TLSPrivateKeyKey, keyBytes)
+	if err != nil {
+		// event + err @ end
+		return err
+	}
 
 	return nil
 }
 
-func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStatus, ref keyhubv1alpha1.SecretKeyReference) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
+func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStatus, ref keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
 	if ref.Name != "pem" && ref.Name != "pkcs12" {
 		return nil, nil, nil, fmt.Errorf("Invalid name '%s', only 'pem' or 'pkcs12' is allowed for single key TLS secret", ref.Name)
 	}
@@ -89,25 +95,22 @@ func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStat
 		return nil, nil, nil, fmt.Errorf("Record %s not found for key %s", ref.Record, ref.Name)
 	}
 
-	// checks
-	// keyhub update? last modified at vergelijken?
-	state := api.FindVaultRecordStatus(status.VaultRecordStatuses, idxEntry.Record.UUID)
-	if state != nil && !idxEntry.Record.LastModifiedAt().After(state.LastModifiedAt.Time) {
-		log.Println("no update detected in keyhub")
+	// Check whether or not the Secret needs updating
+	recordChanged := api.IsVaulRecordChanged(status.VaultRecordStatuses, &idxEntry.Record)
+	secretDataChanged :=
+		api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSPrivateKeyKey) ||
+			api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSCertKey)
+	if !recordChanged && !secretDataChanged {
+		fmt.Println("secret checks pass, no changes detected")
 		return nil, nil, nil, nil
 	}
-	// certState := api.FindSecretKeyStatus(status.SecretKeyStatuses, corev1.TLSCertKey)
-	// if certState != nil &&
-
-	// bcrypt.CompareHashAndPassword(certstate.Hash, ref.)// moeten secret hebben voor value van de key
-
-	// idxEntry.Record, statuses
 
 	record, err := sb.retriever.Get(idxEntry)
 	if err != nil {
 		return nil, nil, nil, err
 	}
 
+	status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
 	api.SetVaultRecordStatus(&status.VaultRecordStatuses, record)
 
 	switch ref.Name {
@@ -130,8 +133,6 @@ func (sb *secretBuilder) parsePEM(pemData []byte, password string) (privateKey i
 		return nil, nil, nil, fmt.Errorf("No certificate found")
 	}
 
-	fmt.Println("pem", "cert", len(certificates))
-
 	certificate = certificates[0]
 	if len(certificates) > 1 {
 		caCerts = certificates[1:]
@@ -146,7 +147,7 @@ func (sb *secretBuilder) parsePEM(pemData []byte, password string) (privateKey i
 	return
 }
 
-func (sb *secretBuilder) loadCertificateBlocks(status *v1alpha1.KeyHubSecretStatus, refs []keyhubv1alpha1.SecretKeyReference) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
+func (sb *secretBuilder) loadCertificateBlocks(status *v1alpha1.KeyHubSecretStatus, refs []keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
 	var privateKeyRef, certificateRef, caCertsRef keyhubv1alpha1.SecretKeyReference
 	for _, ref := range refs {
 		switch ref.Name {
@@ -183,51 +184,75 @@ func (sb *secretBuilder) loadCertificateBlocks(status *v1alpha1.KeyHubSecretStat
 		}
 	}
 
+	// Check whether or not the Secret needs updating
+	privateKeyStatus := api.FindVaultRecordStatus(status.VaultRecordStatuses, privateKeyRef.Record)
+	privateKeyChanged := privateKeyStatus == nil || privateKeyIdxEntry.Record.LastModifiedAt().After(privateKeyStatus.LastModifiedAt.Time)
+	certificateStatus := api.FindVaultRecordStatus(status.VaultRecordStatuses, certificateRef.Record)
+	certificateChanged := certificateStatus == nil || certificateIdxEntry.Record.LastModifiedAt().After(certificateStatus.LastModifiedAt.Time)
+	caCertsChanged := false
+	if caCertsRef.Name == "" {
+		caCertsChanged = len(status.VaultRecordStatuses) == 3 // CACerts key removed
+	} else {
+		caCertsStatus := api.FindVaultRecordStatus(status.VaultRecordStatuses, caCertsRef.Record)
+		caCertsChanged = caCertsStatus == nil || caCertsIdxEntry.Record.LastModifiedAt().After(caCertsStatus.LastModifiedAt.Time)
+	}
+	secretDataChanged :=
+		api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSPrivateKeyKey) ||
+			api.IsSecretKeyChanged(status.SecretKeyStatuses, data, corev1.TLSCertKey)
+	if !privateKeyChanged && !certificateChanged && !caCertsChanged && !secretDataChanged {
+		return nil, nil, nil, nil
+	}
+
+	status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
+
 	privateKeyRecord, err := sb.retriever.Get(privateKeyIdxEntry)
 	if err != nil {
 		return nil, nil, nil, err
 	}
 
-	// 		if len(keyRecord.File()) == 0 {
-	// 			return fmt.Errorf("Missing file for record %s", keyRef.Record)
-	// 		}
-
-	certificateRecord, err := sb.retriever.Get(certificateIdxEntry)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	// 		if len(crtRecord.File()) == 0 {
-	// 			return fmt.Errorf("Missing file for record %s", certRef.Record)
-	// 		}
-	sb.log.Info("checking ca certs", "ca name", caCertsRef.Name)
-	var caCertsRecord *keyhub.VaultRecord
-	if caCertsRef.Name != "" {
-		if caCertsRecord, err = sb.retriever.Get(caCertsIdxEntry); err != nil {
-			sb.log.Info("error ophalen ca certs record")
-			return nil, nil, nil, err
-		}
-
-		// 		if len(crtRecord.File()) == 0 {
-		// 			return fmt.Errorf("Missing file for record %s", certRef.Record)
-		// 		}
+	if len(privateKeyRecord.File()) == 0 {
+		return nil, nil, nil, fmt.Errorf("Missing file for record %s", privateKeyRef.Record)
 	}
 
 	if privateKey, err = keyUtil.ParsePrivateKeyPEM(privateKeyRecord.File()); err != nil {
 		return nil, nil, nil, err
 	}
 
+	api.SetVaultRecordStatus(&status.VaultRecordStatuses, privateKeyRecord)
+
+	certificateRecord, err := sb.retriever.Get(certificateIdxEntry)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	if len(certificateRecord.File()) == 0 {
+		return nil, nil, nil, fmt.Errorf("Missing file for record %s", certificateRef.Record)
+	}
+
 	certificates, err := certUtil.ParseCertsPEM(certificateRecord.File())
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	sb.log.Info("cert en key correct")
+
+	api.SetVaultRecordStatus(&status.VaultRecordStatuses, certificateRecord)
+
+	var caCertsRecord *keyhub.VaultRecord
+	if caCertsRef.Name != "" {
+		if caCertsRecord, err = sb.retriever.Get(caCertsIdxEntry); err != nil {
+			return nil, nil, nil, err
+		}
+
+		if len(caCertsRecord.File()) == 0 {
+			return nil, nil, nil, fmt.Errorf("Missing file for record %s", caCertsRef.Record)
+		}
+
+		api.SetVaultRecordStatus(&status.VaultRecordStatuses, caCertsRecord)
+	}
 
 	if len(certificates) == 1 {
 		certificate = certificates[0]
 		if caCertsRef.Name != "" {
 			if caCerts, err = certUtil.ParseCertsPEM(caCertsRecord.File()); err != nil {
-				sb.log.Info("hier dus error")
 				return nil, nil, nil, err
 			}
 		}

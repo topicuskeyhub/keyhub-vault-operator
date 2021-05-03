@@ -8,6 +8,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
 	keyhubclient "github.com/topicuskeyhub/go-keyhub"
+	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultRecordWithGroup struct {
@@ -17,6 +18,7 @@ type VaultRecordWithGroup struct {
 
 type VaultIndexCache interface {
 	Get(client *keyhub.Client) (map[string]VaultRecordWithGroup, error)
+	Flush()
 }
 
 type vaultIndexCache struct {
@@ -38,6 +40,7 @@ func (c *vaultIndexCache) Get(client *keyhub.Client) (map[string]VaultRecordWith
 		return records.(map[string]VaultRecordWithGroup), nil
 	}
 
+	metrics.KeyHubApiRequests.WithLabelValues("group", "list").Inc()
 	groups, err := client.Groups.List()
 	if err != nil {
 		return nil, err
@@ -46,6 +49,7 @@ func (c *vaultIndexCache) Get(client *keyhub.Client) (map[string]VaultRecordWith
 	result := make(map[string]VaultRecordWithGroup)
 	for _, group := range groups {
 		// log.Info("Found KeyHub group", "uuid", group.UUID, "name", group.Name)
+		metrics.KeyHubApiRequests.WithLabelValues("vault", "list").Inc()
 		records, err := client.Vaults.GetRecords(&group)
 		if err != nil {
 			return nil, err
@@ -61,4 +65,8 @@ func (c *vaultIndexCache) Get(client *keyhub.Client) (map[string]VaultRecordWith
 	c.cache.SetDefault(client.ID, result)
 
 	return result, nil
+}
+
+func (c *vaultIndexCache) Flush() {
+	c.cache.Flush()
 }

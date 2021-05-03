@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-logr/logr"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
+	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
 	"gopkg.in/yaml.v1"
 )
@@ -40,6 +41,7 @@ func (pl *policyLoader) Load() (*[]Policy, error) {
 		}
 	}
 
+	metrics.KeyHubApiRequests.WithLabelValues("group", "list").Inc()
 	groups, err := pl.client.Groups.List()
 	if err != nil {
 		return nil, err
@@ -58,6 +60,7 @@ func (pl *policyLoader) Load() (*[]Policy, error) {
 
 func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhub.Group) error {
 	pl.log.Info("loading group policies", "uuid", group.UUID, "name", group.Name)
+	metrics.KeyHubApiRequests.WithLabelValues("vault", "list").Inc()
 	records, err := pl.client.Vaults.GetRecords(&group)
 	if err != nil {
 		return err
@@ -68,6 +71,7 @@ func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhub.Group) err
 			continue
 		}
 
+		metrics.KeyHubApiRequests.WithLabelValues("vault", "get").Inc()
 		rec, err := pl.client.Vaults.GetRecord(&group, record.UUID, keyhub.RecordOptions{Secret: true})
 		if err != nil {
 			return err
@@ -87,7 +91,7 @@ func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhub.Group) err
 		//fmt.Printf("%v", comment)
 
 		for _, policy := range comment.Policies {
-			*policies = append(*policies, Policy{policy: policy, credentials: ClientCredentials{ClientID: rec.Username, ClientSecret: rec.Password()}})
+			*policies = append(*policies, Policy{policy: policy, Credentials: ClientCredentials{ClientID: rec.Username, ClientSecret: rec.Password()}})
 		}
 	}
 

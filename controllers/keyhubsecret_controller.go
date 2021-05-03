@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -88,29 +89,28 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		return ctrl.Result{}, err
 	}
 
-	// if meta.FindStatusCondition(keyhubsecret.Status.Conditions, string(keyhubv1alpha1.TypeSynced)) != nil {
-	// 	meta.SetStatusCondition(&keyhubsecret.Status.Conditions, metav1.Condition{
-	// 		Type:               string(keyhubv1alpha1.TypeSynced),
-	// 		Status:             metav1.ConditionUnknown,
-	// 		ObservedGeneration: keyhubsecret.Generation,
-	// 		Reason:             string(keyhubv1alpha1.AwaitingSync),
-	// 		Message:            "Waiting for initital sync to complete",
-	// 	})
-	// 	err := r.Status().Update(ctx, keyhubsecret)
-	// 	if err != nil {
-	// 		log.Error(err, "Failed to update KeyHubSecret status")
-	// 		return ctrl.Result{}, err
-	// 	}
-	// }
-
 	secret := r.newSecretForCR(keyhubsecret)
 	res, err := controllerutil.CreateOrPatch(ctx, r.Client, secret, r.reconcileFn(keyhubsecret, secret))
 	if err != nil {
+		r.Recorder.Event(keyhubsecret, "Warning", "ProcessingError", err.Error())
 		log.Error(err, "sync failed")
 	}
-	log.Info("Secret create or patch", "OperationResult", res)
 
 	if res != controllerutil.OperationResultNone {
+		var reason string
+		var message string
+		switch res {
+		case controllerutil.OperationResultCreated:
+			reason = "SecretCreated"
+			message = fmt.Sprintf("Secret (type '%s') has been created", secret.Type)
+		default:
+			reason = "SecretUpdated"
+			message = "Secret has been updated"
+		}
+		r.Recorder.Event(keyhubsecret, "Normal", reason, message)
+	}
+
+	if len(keyhubsecret.Status.SecretKeyStatuses) > 0 {
 		err = r.Status().Update(ctx, keyhubsecret)
 		if err != nil {
 			log.Error(err, "Failed to update KeyHubSecret status")
@@ -118,12 +118,6 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 
-	// // FIXME: status regelt CreateOrPatch al, onderdeel van reconcileFn
-	// // FIXME: events regelen we waar?
-	// if err != nil {
-	// 	return r.manageError(instance, err)
-	// }
-	// return r.manageSuccess(instance, res, secret)
 	return ctrl.Result{}, nil
 }
 
@@ -163,60 +157,6 @@ func (r *KeyHubSecretReconciler) newSecretForCR(cr *keyhubv1alpha1.KeyHubSecret)
 		},
 	}
 }
-
-// func (r *KeyHubSecretReconciler) manageSuccess(cr *keyhubv1alpha1.KeyHubSecret, result controllerutil.OperationResult, secret *corev1.Secret) (reconcile.Result, error) {
-// 	// TODO status bijwerken, lastModified per record zodat we kunnen resyncen indien nodig
-// 	// instance.Status = keyhubv1alpha1.KeyHubSecretStatus{}
-// 	// instance.Status.Conditions = append(instance.Status.Conditions, keyhubv1alpha1.VaultRecordCondition{LastTransitionTime: &metav1.Time{Time: time.Now()}, Message: err.Error()})
-
-// 	cr.Status.Phase = keyhubv1alpha1.SecretSynced
-// 	if result != controllerutil.OperationResultNone {
-// 		cr.Status.Message = fmt.Sprintf("Secret has been %s", result)
-// 		rt := metav1.NewTime(time.Now())
-// 		cr.Status.ReconciledAt = &rt
-// 	} else {
-// 		cr.Status.Message = "Secret is up to date"
-// 	}
-// 	err := r.updateStatus(cr)
-// 	if err != nil {
-// 		return r.manageError(cr, err)
-// 	}
-
-// 	// Record an event for created/updated secrets
-// 	switch result {
-// 	case controllerutil.OperationResultCreated:
-// 		r.Recorder.Event(cr, "Normal", "SecretCreated", fmt.Sprintf("Secret (type '%s') has been created", secret.Type))
-// 	case controllerutil.OperationResultUpdated:
-// 		r.Recorder.Event(cr, "Normal", "SecretUpdated", "Secret has been updated")
-// 	}
-
-// 	return reconcile.Result{RequeueAfter: requeueDelay}, nil
-// }
-
-// func (r *KeyHubSecretReconciler) manageError(cr *keyhubv1alpha1.KeyHubSecret, issue error) (reconcile.Result, error) {
-// 	r.Recorder.Event(cr, "Warning", "ProcessingError", issue.Error())
-// 	// log.Error("error!")
-// 	cr.Status.Phase = keyhubv1alpha1.SecretFailed
-// 	cr.Status.Message = issue.Error()
-// 	err := r.updateStatus(cr)
-// 	if err != nil {
-// 		return reconcile.Result{}, err
-// 	}
-// 	return reconcile.Result{RequeueAfter: requeueDelayAfterError}, nil
-// }
-
-// func (r *KeyHubSecretReconciler) updateStatus(cr *keyhubv1alpha1.KeyHubSecret) error {
-// 	cr.Status.ObservedAt = metav1.NewTime(time.Now())
-
-// 	err := r.Client.Status().Update(context.Background(), cr)
-// 	if err != nil {
-// 		// Ignore conflicts, resource might just be outdated.
-// 		if errors.IsConflict(err) {
-// 			err = nil
-// 		}
-// 	}
-// 	return err
-// }
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *KeyHubSecretReconciler) SetupWithManager(mgr ctrl.Manager) error {

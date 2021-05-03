@@ -8,7 +8,7 @@ import (
 
 type Policy struct {
 	policy
-	credentials ClientCredentials
+	Credentials ClientCredentials
 }
 
 type ClientCredentials struct {

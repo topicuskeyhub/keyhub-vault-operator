@@ -20,17 +20,12 @@ func (sb *secretBuilder) applyBasicAuthSecretData(ks *keyhubv1alpha1.KeyHubSecre
 		return fmt.Errorf("Record %s not found for key %s", ref.Record, ref.Name)
 	}
 
-	// check
-	idxEntry.Record.LastModifiedAt()
-	// vs
-	api.FindVaultRecordStatus(ks.Status.VaultRecordStatuses, ref.Record)
-
-	// hash of secret.Data[corev1.BasicAuthUsernameKey]
-	// vs
-	// status := api.FindSecretKeyStatus(ks.Status.SecretKeyStatuses, corev1.BasicAuthUsernameKey)
-	// status.Hash
-
-	// + pwd hash vs status hash
+	// Check whether or not the Secret needs updating
+	recordChanged := api.IsVaulRecordChanged(ks.Status.VaultRecordStatuses, &idxEntry.Record)
+	secretDataChanged := api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, corev1.BasicAuthUsernameKey)
+	if !recordChanged && !secretDataChanged {
+		return nil
+	}
 
 	record, err := sb.retriever.Get(idxEntry)
 	if err != nil {
@@ -50,6 +45,8 @@ func (sb *secretBuilder) applyBasicAuthSecretData(ks *keyhubv1alpha1.KeyHubSecre
 		corev1.BasicAuthPasswordKey: []byte(record.Password()),
 	}
 
+	ks.Status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
+	ks.Status.SecretKeyStatuses = []keyhubv1alpha1.SecretKeyStatus{}
 	api.SetVaultRecordStatus(&ks.Status.VaultRecordStatuses, record)
 	err = api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, corev1.BasicAuthUsernameKey, secret.Data[corev1.BasicAuthUsernameKey])
 	if err != nil {

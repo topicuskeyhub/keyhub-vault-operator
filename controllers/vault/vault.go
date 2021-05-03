@@ -3,6 +3,7 @@ package vault
 import (
 	"github.com/go-logr/logr"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
+	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultSecretRetriever interface {
@@ -22,6 +23,7 @@ func NewVaultSecretRetriever(log logr.Logger, client *keyhub.Client) VaultSecret
 }
 
 func (r *vaultSecretRetriever) Get(idxEntry VaultRecordWithGroup) (*keyhub.VaultRecord, error) {
+	metrics.KeyHubApiRequests.WithLabelValues("vault", "get").Inc()
 	return r.client.Vaults.GetRecord(
 		&idxEntry.Group,
 		idxEntry.Record.UUID,

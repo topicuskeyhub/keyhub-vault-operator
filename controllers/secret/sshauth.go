@@ -23,7 +23,12 @@ func (sb *secretBuilder) applySSHAuthSecretData(ks *keyhubv1alpha1.KeyHubSecret,
 		return fmt.Errorf("Record %s not found for key %s", ref.Record, ref.Name)
 	}
 
-	// checks
+	// Check whether or not the Secret needs updating
+	recordChanged := api.IsVaulRecordChanged(ks.Status.VaultRecordStatuses, &idxEntry.Record)
+	secretDataChanged := api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, corev1.SSHAuthPrivateKey)
+	if !recordChanged && !secretDataChanged {
+		return nil
+	}
 
 	record, err := sb.retriever.Get(idxEntry)
 	if err != nil {
@@ -38,6 +43,8 @@ func (sb *secretBuilder) applySSHAuthSecretData(ks *keyhubv1alpha1.KeyHubSecret,
 		corev1.SSHAuthPrivateKey: record.File(),
 	}
 
+	ks.Status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
+	ks.Status.SecretKeyStatuses = []keyhubv1alpha1.SecretKeyStatus{}
 	api.SetVaultRecordStatus(&ks.Status.VaultRecordStatuses, record)
 	err = api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, corev1.SSHAuthPrivateKey, secret.Data[corev1.SSHAuthPrivateKey])
 	if err != nil {

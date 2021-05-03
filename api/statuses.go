@@ -45,11 +45,29 @@ func FindVaultRecordStatus(statuses []v1alpha1.VaultRecordStatus, recordID strin
 	return nil
 }
 
+func DeleteVaultRecordStatus(statuses []v1alpha1.VaultRecordStatus, recordID string) []v1alpha1.VaultRecordStatus {
+	var d int
+	for i := range statuses {
+		if statuses[i].RecordID == recordID {
+			d = i
+			break
+		}
+	}
+
+	return append(statuses[:d], statuses[d+1:]...)
+}
+
+func IsVaulRecordChanged(statuses []v1alpha1.VaultRecordStatus, record *keyhub.VaultRecord) bool {
+	status := FindVaultRecordStatus(statuses, record.UUID)
+	return status == nil || metav1.NewTime(record.LastModifiedAt()).Rfc3339Copy().After(status.LastModifiedAt.Time)
+}
+
 // SetSecretKeyStatus sets the corresponding status in statuses to newStatus.
 // statuses must be non-nil.
 func SetSecretKeyStatus(statuses *[]v1alpha1.SecretKeyStatus, key string, value []byte) error {
 	if statuses == nil {
-		return nil
+		statuses = &[]v1alpha1.SecretKeyStatus{}
+		// return nil
 	}
 
 	encValue := make([]byte, base64.StdEncoding.EncodedLen(len(value)))
@@ -63,7 +81,6 @@ func SetSecretKeyStatus(statuses *[]v1alpha1.SecretKeyStatus, key string, value 
 		Key:  key,
 		Hash: hash,
 	}
-
 	existingStatus := FindSecretKeyStatus(*statuses, newStatus.Key)
 	if existingStatus == nil {
 		*statuses = append(*statuses, newStatus)
@@ -84,4 +101,24 @@ func FindSecretKeyStatus(statuses []v1alpha1.SecretKeyStatus, key string) *v1alp
 	}
 
 	return nil
+}
+
+func DeleteSecretKeyStatus(statuses []v1alpha1.SecretKeyStatus, keysToRemove map[string]struct{}) []v1alpha1.SecretKeyStatus {
+	ret := make([]v1alpha1.SecretKeyStatus, 0)
+	for _, status := range statuses {
+		if _, found := keysToRemove[status.Key]; !found {
+			ret = append(ret, status)
+		}
+	}
+	return ret
+}
+
+// Compares current value of key against expected SecretKeyStatus
+func IsSecretKeyChanged(statuses []v1alpha1.SecretKeyStatus, data map[string][]byte, key string) bool {
+	encValue := make([]byte, base64.StdEncoding.EncodedLen(len(data[key])))
+	base64.StdEncoding.Encode(encValue, data[key])
+
+	status := FindSecretKeyStatus(statuses, key)
+
+	return status == nil || bcrypt.CompareHashAndPassword(status.Hash, encValue) != nil
 }
