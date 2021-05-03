@@ -58,3 +58,5 @@ rules:
   - events
   verbs:
   - create
+  - list
+  - patch
