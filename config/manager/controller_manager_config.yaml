@@ -4,6 +4,7 @@ health:
   healthProbeBindAddress: :8081
 metrics:
   # rbac-proxy with tls? use 127.0.0.1:8080 as bind address
+  # see config/default/manager_auth_proxy_patch.yaml
   bindAddress: 0.0.0.0:8080
 webhook:
   port: 9443
