@@ -1,7 +1,6 @@
 package secret
 
 import (
-	"fmt"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -50,7 +49,6 @@ func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, 
 		secretDataChanged :=
 			api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, ref.Name)
 		if !recordChanged && !secretDataChanged {
-			fmt.Println("no changes detected", "key", ref.Name)
 			continue
 		}
 
