@@ -30,6 +30,7 @@ func (sb *secretBuilder) applySSHAuthSecretData(ks *keyhubv1alpha1.KeyHubSecret,
 		return nil
 	}
 
+	sb.log.Info("Syncing KeyHub vault record", "keyhubsecret", fmt.Sprintf("%s/%s", ks.Namespace, ks.Name))
 	record, err := sb.retriever.Get(idxEntry)
 	if err != nil {
 		return err

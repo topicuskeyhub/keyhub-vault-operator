@@ -94,6 +94,7 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	if err != nil {
 		r.Recorder.Event(keyhubsecret, "Warning", "ProcessingError", err.Error())
 		log.Error(err, "sync failed")
+		return ctrl.Result{RequeueAfter: 2 * time.Minute}, err
 	}
 
 	if res != controllerutil.OperationResultNone {
@@ -114,11 +115,11 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		err = r.Status().Update(ctx, keyhubsecret)
 		if err != nil {
 			log.Error(err, "Failed to update KeyHubSecret status")
-			return ctrl.Result{}, err
+			return ctrl.Result{RequeueAfter: 2 * time.Minute}, err
 		}
 	}
 
-	return ctrl.Result{}, nil
+	return ctrl.Result{RequeueAfter: 10 * time.Minute}, nil
 }
 
 func (r *KeyHubSecretReconciler) reconcileFn(cr *keyhubv1alpha1.KeyHubSecret, s *corev1.Secret) controllerutil.MutateFn {

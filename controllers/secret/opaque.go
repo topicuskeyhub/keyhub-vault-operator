@@ -8,11 +8,17 @@ import (
 	"github.com/topicusonderwijs/keyhub-vault-operator/api"
 	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, secret *corev1.Secret) error {
 	if secret.Data == nil {
 		secret.Data = make(map[string][]byte)
+	}
+
+	name := types.NamespacedName{
+		Name:      ks.Name,
+		Namespace: ks.Namespace,
 	}
 
 	// Remove obsolete keys
@@ -51,6 +57,8 @@ func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, 
 		if !recordChanged && !secretDataChanged {
 			continue
 		}
+
+		sb.log.Info("Syncing KeyHub vault record", "keyhubsecret", name.String(), "record", idxEntry.Record.UUID)
 
 		record, err := sb.retriever.Get(idxEntry)
 		if err != nil {

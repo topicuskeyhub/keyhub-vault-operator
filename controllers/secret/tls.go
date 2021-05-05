@@ -20,6 +20,7 @@ import (
 	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
 
 	certUtil "k8s.io/client-go/util/cert"
 	keyUtil "k8s.io/client-go/util/keyutil"
@@ -39,10 +40,15 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 	var caCerts []*x509.Certificate
 	var err error
 
+	name := types.NamespacedName{
+		Name:      ks.Name,
+		Namespace: ks.Namespace,
+	}
+
 	if len(ks.Spec.Data) == 1 {
-		privateKey, certificate, caCerts, err = sb.loadCertificateBundle(&ks.Status, ks.Spec.Data[0], secret.Data)
+		privateKey, certificate, caCerts, err = sb.loadCertificateBundle(name, &ks.Status, ks.Spec.Data[0], secret.Data)
 	} else {
-		privateKey, certificate, caCerts, err = sb.loadCertificateBlocks(&ks.Status, ks.Spec.Data, secret.Data)
+		privateKey, certificate, caCerts, err = sb.loadCertificateBlocks(name, &ks.Status, ks.Spec.Data, secret.Data)
 	}
 	if err != nil {
 		return err
@@ -84,7 +90,7 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 	return nil
 }
 
-func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStatus, ref keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
+func (sb *secretBuilder) loadCertificateBundle(keyhubSecretName types.NamespacedName, status *v1alpha1.KeyHubSecretStatus, ref keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
 	if ref.Name != "pem" && ref.Name != "pkcs12" {
 		return nil, nil, nil, fmt.Errorf("Invalid name '%s', only 'pem' or 'pkcs12' is allowed for single key TLS secret", ref.Name)
 	}
@@ -103,6 +109,7 @@ func (sb *secretBuilder) loadCertificateBundle(status *v1alpha1.KeyHubSecretStat
 		return nil, nil, nil, nil
 	}
 
+	sb.log.Info("Syncing KeyHub vault record", "keyhubsecret", keyhubSecretName.String())
 	record, err := sb.retriever.Get(idxEntry)
 	if err != nil {
 		return nil, nil, nil, err
@@ -145,7 +152,7 @@ func (sb *secretBuilder) parsePEM(pemData []byte, password string) (privateKey i
 	return
 }
 
-func (sb *secretBuilder) loadCertificateBlocks(status *v1alpha1.KeyHubSecretStatus, refs []keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
+func (sb *secretBuilder) loadCertificateBlocks(keyhubSecretName types.NamespacedName, status *v1alpha1.KeyHubSecretStatus, refs []keyhubv1alpha1.SecretKeyReference, data map[string][]byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
 	var privateKeyRef, certificateRef, caCertsRef keyhubv1alpha1.SecretKeyReference
 	for _, ref := range refs {
 		switch ref.Name {
@@ -202,6 +209,8 @@ func (sb *secretBuilder) loadCertificateBlocks(status *v1alpha1.KeyHubSecretStat
 	}
 
 	status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
+
+	sb.log.Info("Syncing KeyHub vault record(s)", "keyhubsecret", keyhubSecretName.String())
 
 	privateKeyRecord, err := sb.retriever.Get(privateKeyIdxEntry)
 	if err != nil {
