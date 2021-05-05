@@ -45,7 +45,7 @@ func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, 
 	for _, ref := range ks.Spec.Data {
 		idxEntry, found := sb.records[ref.Record]
 		if !found {
-			sb.log.Info("record missing", "uuid", ref.Record)
+			sb.log.Info("Missing KeyHub vault record", "keyhubsecret", name.String(), "key", ref.Name, "record", ref.Record)
 			// event?
 			continue
 		}

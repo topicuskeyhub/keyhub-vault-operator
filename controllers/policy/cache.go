@@ -24,7 +24,7 @@ func NewPolicyCache(log logr.Logger, loader PolicyLoader) PolicyCache {
 	return &policyCache{
 		log:    log,
 		loader: loader,
-		cache:  cache.New(10*time.Minute, 15*time.Minute),
+		cache:  cache.New(2*time.Hour, 30*time.Minute),
 		mutex:  &sync.Mutex{},
 	}
 }
