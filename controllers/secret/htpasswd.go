@@ -40,8 +40,9 @@ func (sb *secretBuilder) applyApachePasswordFile(ks *keyhubv1alpha1.KeyHubSecret
 		idxEntries = append(idxEntries, idxEntry)
 	}
 
+	// FIXME: 'users' is the traefik key, get it from the key name
 	secretDataChanged :=
-		api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, ".htpasswd")
+		api.IsSecretKeyChanged(ks.Status.SecretKeyStatuses, secret.Data, "users")
 
 	if !needsUpdating && !secretDataChanged {
 		return nil
@@ -80,10 +81,10 @@ func (sb *secretBuilder) applyApachePasswordFile(ks *keyhubv1alpha1.KeyHubSecret
 	}
 
 	secret.Data = map[string][]byte{
-		".htpasswd": credentials.Bytes(),
+		"users": credentials.Bytes(),
 	}
 
-	err := api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, ".htpasswd", secret.Data[corev1.BasicAuthUsernameKey])
+	err := api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, "users", secret.Data[corev1.BasicAuthUsernameKey])
 	if err != nil {
 		// event + err @ end
 		return err
