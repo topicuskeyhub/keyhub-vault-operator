@@ -49,6 +49,8 @@ func (sb *secretBuilder) Build(ks *keyhubv1alpha1.KeyHubSecret, secret *corev1.S
 		return sb.applySSHAuthSecretData(ks, secret)
 	case corev1.SecretTypeTLS:
 		return sb.applyTLSSecretData(ks, secret)
+	case keyhubv1alpha1.SecretTypeApachePasswordFile:
+		return sb.applyApachePasswordFile(ks, secret)
 	default:
 		return fmt.Errorf("Unsupported secret type: %s", secret.Type)
 	}

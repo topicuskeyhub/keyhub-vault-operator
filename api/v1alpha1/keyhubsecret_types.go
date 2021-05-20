@@ -24,6 +24,8 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+const SecretTypeApachePasswordFile corev1.SecretType = "kubernetes.io/htpasswd"
+
 // KeyHubSecretSpec defines the desired state of KeyHubSecret
 // +kubebuilder:validation:XPreserveUnknownFields
 type KeyHubSecretSpec struct {
