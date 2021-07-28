@@ -84,7 +84,7 @@ func (sb *secretBuilder) applyApachePasswordFile(ks *keyhubv1alpha1.KeyHubSecret
 		"users": credentials.Bytes(),
 	}
 
-	err := api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, "users", secret.Data[corev1.BasicAuthUsernameKey])
+	err := api.SetSecretKeyStatus(&ks.Status.SecretKeyStatuses, "users", secret.Data["users"])
 	if err != nil {
 		// event + err @ end
 		return err
