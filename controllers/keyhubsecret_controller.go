@@ -39,8 +39,8 @@ import (
 )
 
 const (
-	requeueDelay           = 3 * time.Minute
-	requeueDelayAfterError = 2 * time.Minute
+	requeueDelay           = time.Duration(5) * time.Minute
+	requeueDelayAfterError = time.Duration(2) * time.Minute
 )
 
 // KeyHubSecretReconciler reconciles a KeyHubSecret object
@@ -94,7 +94,7 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	if err != nil {
 		r.Recorder.Event(keyhubsecret, "Warning", "ProcessingError", err.Error())
 		log.Error(err, "sync failed")
-		return ctrl.Result{RequeueAfter: 2 * time.Minute}, err
+		return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
 	}
 
 	if res != controllerutil.OperationResultNone {
@@ -115,11 +115,11 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		err = r.Status().Update(ctx, keyhubsecret)
 		if err != nil {
 			log.Error(err, "Failed to update KeyHubSecret status")
-			return ctrl.Result{RequeueAfter: 2 * time.Minute}, err
+			return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
 		}
 	}
 
-	return ctrl.Result{RequeueAfter: 5 * time.Minute}, nil
+	return ctrl.Result{RequeueAfter: requeueDelay}, nil
 }
 
 func (r *KeyHubSecretReconciler) reconcileFn(cr *keyhubv1alpha1.KeyHubSecret, s *corev1.Secret) controllerutil.MutateFn {
