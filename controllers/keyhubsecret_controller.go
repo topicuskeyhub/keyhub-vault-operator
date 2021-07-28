@@ -39,8 +39,8 @@ import (
 )
 
 const (
-	requeueDelay           = time.Duration(5) * time.Minute
-	requeueDelayAfterError = time.Duration(2) * time.Minute
+	requeueDelay           = time.Duration(5 * time.Minute)
+	requeueDelayAfterError = time.Duration(2 * time.Minute)
 )
 
 // KeyHubSecretReconciler reconciles a KeyHubSecret object
