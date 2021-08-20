@@ -14,15 +14,23 @@ node() {
     git.checkout { }
 
     def img = dockerfile.build {
-      name = 'keyhub-vault-operator'
+      name = "keyhub-vault-operator"
+    }
+
+    stage("Test") {
+      docker.image("golang:1.15").inside() {
+        sh("make test")
+      }
     }
     
-    dockerfile.publish {
-      image = img
-      baseTag = false
-      latestTag = isMainBranch
-      tags = releaseTags
-      distribute = true
+    if (isMainBranch || releaseTags) {
+      dockerfile.publish {
+        image = img
+        baseTag = false
+        latestTag = isMainBranch
+        tags = releaseTags
+        distribute = true
+      }
     }
   }
 
