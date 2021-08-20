@@ -14,15 +14,24 @@ node() {
     git.checkout { }
 
     def img = dockerfile.build {
-      name = 'keyhub-vault-operator'
+      name = "keyhub-vault-operator"
+    }
+
+    stage("Test") {
+      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test .")
+      kubebuilder.inside() {
+        sh("make test")
+      }
     }
     
-    dockerfile.publish {
-      image = img
-      baseTag = false
-      latestTag = isMainBranch
-      tags = releaseTags
-      distribute = true
+    if (isMainBranch || releaseTags) {
+      dockerfile.publish {
+        image = img
+        baseTag = false
+        latestTag = isMainBranch
+        tags = releaseTags
+        distribute = true
+      }
     }
   }
 
