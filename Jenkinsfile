@@ -18,7 +18,7 @@ node() {
     }
 
     stage("Test") {
-      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test")
+      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test .")
       kubebuilder.inside() {
         sh("make test")
       }
