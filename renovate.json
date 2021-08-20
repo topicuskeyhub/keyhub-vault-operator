@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>topicusonderwijs/renovate-config"],
+  "enabledManagers": ["gomod"],
+  "packageRules": [
+    {
+      "groupName": "k8s deps",
+      "matchPackagePatterns": ["^k8s.io/", "^sigs.k8s.io/"]
+    },
+    {
+      "groupName": "prometheus deps",
+      "matchPackagePatterns": ["^github.com/prometheus/"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false
+    }
+  ]
+}
