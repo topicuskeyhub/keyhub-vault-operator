@@ -18,7 +18,8 @@ node() {
     }
 
     stage("Test") {
-      docker.image("golang:1.15").inside() {
+      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test")
+      kubebuilder.inside() {
         sh("make test")
       }
     }
