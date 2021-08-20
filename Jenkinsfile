@@ -18,7 +18,7 @@ node() {
     }
 
     stage("Test") {
-      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test --env XDG_CACHE_HOME=/tmp/.cache .")
+      def kubebuilder = docker.build("kubebuilder-${env.BUILD_ID}", "-f Dockerfile.test .")
       kubebuilder.inside() {
         sh("make test")
       }
