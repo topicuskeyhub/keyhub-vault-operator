@@ -3,14 +3,10 @@ def releaseTags = []
 if ( env.TAG_NAME && env.TAG_NAME.startsWith("v") ) {
   releaseTags << env.TAG_NAME
 }
-def cron = ""
-if (isMainBranch || releaseTags) {
-  cron = "@weekend"
-}
 
 config {
   daysToKeep = 21
-  cronTrigger = cron
+  cronTrigger = isMainBranch || releaseTags ? "weekend" : ""
 }
 
 node() {
