@@ -6,7 +6,7 @@ if ( env.TAG_NAME && env.TAG_NAME.startsWith("v") ) {
 
 config {
   daysToKeep = 21
-  cronTrigger = isMainBranch || releaseTags ? "weekend" : ""
+  cronTrigger = isMainBranch || releaseTags ? "@weekend" : ""
 }
 
 node() {
