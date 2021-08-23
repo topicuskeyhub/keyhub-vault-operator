@@ -1,12 +1,16 @@
-config {
-	daysToKeep = 21
-	cronTrigger = '@weekend'
+def isMainBranch = env.BRANCH_NAME == "main"
+def releaseTags = []
+if ( env.TAG_NAME && env.TAG_NAME.startsWith("v") ) {
+  releaseTags << env.TAG_NAME
+}
+def cron = ""
+if (isMainBranch || releaseTags) {
+  cron = "@weekend"
 }
 
-def isMainBranch = env.BRANCH_NAME == 'main'
-def releaseTags = []
-if ( env.TAG_NAME && env.TAG_NAME.startsWith('v') ) {
-  releaseTags << env.TAG_NAME
+config {
+  daysToKeep = 21
+  cronTrigger = cron
 }
 
 node() {
