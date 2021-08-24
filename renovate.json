@@ -12,6 +12,10 @@
       "matchPackagePatterns": ["^github.com/prometheus/"]
     },
     {
+      "matchPackagePatterns": ["^k8s.io/client-go"],
+      "matchCurrentVersion": "/^0\\./"
+    },
+    {
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": false
     }
