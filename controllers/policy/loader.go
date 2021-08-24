@@ -9,7 +9,7 @@ import (
 	keyhub "github.com/topicuskeyhub/go-keyhub"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
-	"gopkg.in/yaml.v1"
+	"gopkg.in/yaml.v2"
 )
 
 type comment struct {
