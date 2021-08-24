@@ -3,7 +3,7 @@ module github.com/topicusonderwijs/keyhub-vault-operator
 go 1.15
 
 require (
-	github.com/go-logr/logr v0.4.0
+	github.com/go-logr/logr v1.1.0
 	github.com/gorilla/mux v1.8.0
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.16.0
