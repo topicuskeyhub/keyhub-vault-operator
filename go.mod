@@ -3,15 +3,12 @@ module github.com/topicusonderwijs/keyhub-vault-operator
 go 1.15
 
 require (
-	github.com/AlekSi/gocov-xml v0.0.0-20190121064608-3a14fb1c4737 // indirect
-	github.com/axw/gocov v1.0.0 // indirect
 	github.com/go-logr/logr v0.4.0
 	github.com/gorilla/mux v1.8.0
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.16.0
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.11.0
-	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/topicuskeyhub/go-keyhub v0.2.1
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
