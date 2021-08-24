@@ -13,7 +13,7 @@
     },
     {
       "matchPackagePatterns": ["^k8s.io/client-go"],
-      "matchCurrentVersion": "!/^0\\./",
+      "matchCurrentVersion": "!/^v0\\./",
       "enabled": false
     },
     {
