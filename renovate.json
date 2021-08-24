@@ -4,17 +4,17 @@
   "enabledManagers": ["gomod"],
   "packageRules": [
     {
+      "matchPackagePatterns": ["^k8s.io/client-go"],
+      "matchCurrentVersion": "!/^0\\./",
+      "enabled": false
+    },
+    {
       "groupName": "k8s deps",
       "matchPackagePatterns": ["^k8s.io/", "^sigs.k8s.io/"]
     },
     {
       "groupName": "prometheus deps",
       "matchPackagePatterns": ["^github.com/prometheus/"]
-    },
-    {
-      "matchPackagePatterns": ["^k8s.io/client-go"],
-      "matchCurrentVersion": "!/^v0\\./",
-      "enabled": false
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
