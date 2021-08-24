@@ -4,6 +4,10 @@
   "enabledManagers": ["gomod"],
   "packageRules": [
     {
+      "matchPackagePatterns": ["^go-logr/logr"],
+      "allowedVersions": "/^v0\\./"
+    },
+    {
       "matchPackagePatterns": ["^k8s.io/client-go"],
       "allowedVersions": "/^v0\\./"
     },
