@@ -5,7 +5,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["^k8s.io/client-go"],
-      "allowedVersions": "/^0\\./"
+      "allowedVersions": "/^v0\\./"
     },
     {
       "groupName": "k8s deps",
