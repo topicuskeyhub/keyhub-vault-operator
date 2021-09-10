@@ -55,7 +55,6 @@ func (sb *secretBuilder) applyTLSSecretData(ks *keyhubv1alpha1.KeyHubSecret, sec
 	}
 	if privateKey == nil && certificate == nil && caCerts == nil {
 		// no changes
-		ks.Status.SecretKeyStatuses = []keyhubv1alpha1.SecretKeyStatus{}
 		return nil
 	}
 

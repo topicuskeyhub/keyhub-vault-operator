@@ -115,11 +115,14 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	if len(keyhubsecret.Status.SecretKeyStatuses) > 0 {
 		keyhubsecret.Status.Sync.Status = keyhubv1alpha1.SyncStatusCodeSynced
-		err = r.Status().Update(ctx, keyhubsecret)
-		if err != nil {
-			log.Error(err, "Failed to update KeyHubSecret status")
-			return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
-		}
+	} else {
+		keyhubsecret.Status.Sync.Status = keyhubv1alpha1.SyncStatusCodeUnknown
+	}
+
+	err = r.Status().Update(ctx, keyhubsecret)
+	if err != nil {
+		log.Error(err, "Failed to update KeyHubSecret status")
+		return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
 	}
 
 	return ctrl.Result{RequeueAfter: requeueDelay}, nil
