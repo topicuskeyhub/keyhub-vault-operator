@@ -79,6 +79,23 @@ var (
 	AwaitingSync KeyHubSecretConditionReason = "AwaitingSync"
 )
 
+type SyncStatusCode string
+
+const (
+	// SyncStatusCodeUnknown indicates that the status of a sync could not be reliably determined
+	SyncStatusCodeUnknown SyncStatusCode = "Unknown"
+	// SyncStatusCodeOutOfSync indicates that desired and live states match
+	SyncStatusCodeSynced SyncStatusCode = "Synced"
+	// SyncStatusCodeOutOfSync indicates that there is a drift beween desired and live states
+	SyncStatusCodeOutOfSync SyncStatusCode = "OutOfSync"
+)
+
+// SyncStatus contains information about the currently observed live and desired states of a secret
+type SyncStatus struct {
+	// Status is the sync state of the secret
+	Status SyncStatusCode `json:"status"`
+}
+
 type VaultRecordStatus struct {
 	RecordID string `json:"recordID"`
 
@@ -105,6 +122,8 @@ type KeyHubSecretStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
 
 	ObservedSecretGeneration int64 `json:"observedGeneration,omitempty"`
+
+	Sync SyncStatus `json:"sync,omitempty"`
 
 	// +optional
 	VaultRecordStatuses []VaultRecordStatus `json:"vaultRecordStatuses,omitempty"`
@@ -140,6 +159,7 @@ type VaultRecordState2 struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Sync Status",type="string",JSONPath=".status.sync.status",description="Sync state of the Secret"
 
 // KeyHubSecret is the Schema for the keyhubsecrets API
 type KeyHubSecret struct {

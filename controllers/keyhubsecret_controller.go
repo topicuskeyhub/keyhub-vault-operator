@@ -92,6 +92,8 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	secret := r.newSecretForCR(keyhubsecret)
 	res, err := controllerutil.CreateOrPatch(ctx, r.Client, secret, r.reconcileFn(keyhubsecret, secret))
 	if err != nil {
+		keyhubsecret.Status.Sync.Status = keyhubv1alpha1.SyncStatusCodeOutOfSync
+		r.Status().Update(ctx, keyhubsecret)
 		r.Recorder.Event(keyhubsecret, "Warning", "ProcessingError", err.Error())
 		log.Error(err, "sync failed")
 		return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
@@ -112,6 +114,7 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	if len(keyhubsecret.Status.SecretKeyStatuses) > 0 {
+		keyhubsecret.Status.Sync.Status = keyhubv1alpha1.SyncStatusCodeSynced
 		err = r.Status().Update(ctx, keyhubsecret)
 		if err != nil {
 			log.Error(err, "Failed to update KeyHubSecret status")
