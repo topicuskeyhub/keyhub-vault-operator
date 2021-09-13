@@ -122,6 +122,7 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	err = r.Status().Update(ctx, keyhubsecret)
 	if err != nil {
 		log.Error(err, "Failed to update KeyHubSecret status")
+		r.Recorder.Event(keyhubsecret, "Warning", "FailedUpdate", err.Error())
 		return ctrl.Result{RequeueAfter: requeueDelayAfterError}, err
 	}
 
