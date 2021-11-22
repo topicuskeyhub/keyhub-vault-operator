@@ -19,6 +19,8 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ${{ secrets.github_token }}
+          git-user-name: ${{ github.repository_owner }}
+          git-user-email: "${{ github.repository_owner }}@users.noreply.github.com"
           output-file: "false"
           pre-commit: ".github/release.js"
           skip-version-file: "true"
@@ -32,3 +34,15 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
+      - name: Prepare next iteration
+        run: |
+          yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
+      - name: push
+        uses: github-actions-x/commit@v2.8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(release): prepare for next development iteration"
+          files: config/manager/kustomization.yaml
+          name: ${{ github.repository_owner }}
+          email: "${{ github.repository_owner }}@users.noreply.github.com" 
+      
