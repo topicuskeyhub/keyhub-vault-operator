@@ -35,10 +35,12 @@ jobs:
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
       - name: Prepare next iteration
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
       - name: push
         uses: github-actions-x/commit@v2.8
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore(release): prepare for next development iteration"
