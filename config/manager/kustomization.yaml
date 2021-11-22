@@ -11,4 +11,4 @@ kind: Kustomization
 images:
   - name: controller
     newName: docker.topicus.education/keyhub-vault-operator
-    newTag: 0.1.0
+    newTag: latest
