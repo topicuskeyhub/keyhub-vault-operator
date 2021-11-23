@@ -21,6 +21,13 @@ make test
 - Install [minikube](https://minikube.sigs.k8s.io/docs/) or something similar
 - Install [Operator SDK](https://sdk.operatorframework.io/)
 
+### Git pre-commit hook to check Conventional Commits
+- Install [`pre-commit`](https://pre-commit.com/#install)
+- Install `pre-commit` script ([more info](https://github.com/compilerla/conventional-pre-commit)):
+  ```console
+  pre-commit install --hook-type commit-msg
+  ```
+
 ## Install
 ```
 apiVersion: kustomize.config.k8s.io/v1beta1
