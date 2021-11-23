@@ -22,7 +22,10 @@ make test
 - Install [Operator SDK](https://sdk.operatorframework.io/)
 
 ## Release
-- Use a release branch `release-x.y`, e.g. `release-0.1`
-- Update `images['controller'].newTag` in `config/manager/kustomization.yaml` with the full semver (prefixed with a 'v'), e.g. `v0.1.0`
-- Create and push the tag `v0.1.0`
-- Jenkins will build and publish the image
+- Manually run the `Release` workflow (branch `main`) from Github Actions.
+
+The `Release` workflow will do the following:
+- Update `images['controller'].newTag` in `config/manager/kustomization.yaml` with the full semver (prefixed with a 'v'), e.g. `v0.1.0`. The semver is based on conventional commits and the latest git tag.
+- Create and push the release tag, e.g. `v0.1.0`.
+- Create a GitHub release with a changelog based on the (conventional) commits since the last release.
+- Jenkins will build and publish the image from the release tag.
