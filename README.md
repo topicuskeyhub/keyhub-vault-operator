@@ -21,6 +21,17 @@ make test
 - Install [minikube](https://minikube.sigs.k8s.io/docs/) or something similar
 - Install [Operator SDK](https://sdk.operatorframework.io/)
 
+## Install
+```
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: keyhub-vault-operator
+
+resources:
+- ssh://github.com/topicusonderwijs/keyhub-vault-operator//config/default?ref=main
+```
+
 ## Release
 - Manually run the `Release` workflow (branch `main`) from Github Actions.
 
