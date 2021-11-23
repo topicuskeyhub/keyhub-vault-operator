@@ -1,12 +1,12 @@
-def isMainBranch = env.BRANCH_NAME == "main"
+def isPrimaryBranch = env.BRANCH_IS_PRIMARY
 def releaseTags = []
 if ( env.TAG_NAME && env.TAG_NAME.startsWith("v") ) {
-  releaseTags << env.TAG_NAME
+  releaseTags << env.TAG_NAME.substring(1)
 }
 
 config {
   daysToKeep = 21
-  cronTrigger = isMainBranch || releaseTags ? "@weekend" : ""
+  cronTrigger = isPrimaryBranch ? "@weekend" : ""
 }
 
 node() {
@@ -24,11 +24,11 @@ node() {
       }
     }
     
-    if (isMainBranch || releaseTags) {
+    if (isPrimaryBranch || releaseTags) {
       dockerfile.publish {
         image = img
         baseTag = false
-        latestTag = isMainBranch
+        latestTag = isPrimaryBranch
         tags = releaseTags
         distribute = true
       }
