@@ -89,6 +89,11 @@ func (r *KeyHubSecretReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		return ctrl.Result{}, err
 	}
 
+	if keyhubsecret.DeletionTimestamp != nil {
+		log.Info("KeyHubSecret resource marked for deletion. Ignoring since object must be deleted")
+		return ctrl.Result{}, nil
+	}
+
 	secret := r.newSecretForCR(keyhubsecret)
 	res, err := controllerutil.CreateOrPatch(ctx, r.Client, secret, r.reconcileFn(keyhubsecret, secret))
 	if err != nil {

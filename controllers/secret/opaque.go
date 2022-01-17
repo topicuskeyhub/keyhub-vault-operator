@@ -70,18 +70,26 @@ func (sb *secretBuilder) applyOpaqueSecretData(ks *keyhubv1alpha1.KeyHubSecret, 
 		if ref.Property == "username" {
 			secret.Data[ref.Name] = []byte(record.Username)
 		} else if ref.Property == "password" || ref.Property == "" {
+			pwd := []byte("")
+			if record.Password() != nil {
+				pwd = []byte(*record.Password())
+			}
 			if ref.Format == "bcrypt" {
-				secret.Data[ref.Name], err = bcrypt.GenerateFromPassword([]byte(record.Password()), bcrypt.DefaultCost)
+				secret.Data[ref.Name], err = bcrypt.GenerateFromPassword(pwd, bcrypt.DefaultCost)
 				if err != nil {
 					continue
 				}
 			} else {
-				secret.Data[ref.Name] = []byte(record.Password())
+				secret.Data[ref.Name] = pwd
 			}
 		} else if ref.Property == "link" {
 			secret.Data[ref.Name] = []byte(record.URL)
 		} else if ref.Property == "file" {
-			secret.Data[ref.Name] = record.File()
+			file := []byte{}
+			if record.File() != nil {
+				file = *record.File()
+			}
+			secret.Data[ref.Name] = file
 		} else if ref.Property == "lastModifiedAt" {
 			secret.Data[ref.Name] = []byte(record.LastModifiedAt().UTC().Format(time.RFC3339))
 		} else {

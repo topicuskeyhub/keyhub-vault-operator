@@ -37,13 +37,13 @@ func (sb *secretBuilder) applyBasicAuthSecretData(ks *keyhubv1alpha1.KeyHubSecre
 		return fmt.Errorf("Username field of record %s is empty", ref.Record)
 	}
 
-	if len(record.Password()) == 0 {
+	if record.Password() == nil {
 		return fmt.Errorf("Password field of record %s is empty", ref.Record)
 	}
 
 	secret.Data = map[string][]byte{
 		corev1.BasicAuthUsernameKey: []byte(record.Username),
-		corev1.BasicAuthPasswordKey: []byte(record.Password()),
+		corev1.BasicAuthPasswordKey: []byte(*record.Password()),
 	}
 
 	ks.Status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}

@@ -1,3 +1,4 @@
 bin/
 testbin/bin
-cover.out
+cover.*
+keyhub-vault-operator

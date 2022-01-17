@@ -10,9 +10,9 @@
           "href": "https://keyhub.local/keyhub/rest/v1/group/1001"
         }
       ],
-      "uuid": "GROUP-1001",
-      "name": "Group 1001"
+      "uuid": "00000000-0000-0000-1001-000000000000",
+      "name": "Group 1001",
+      "extendedAccess": ""
     }
-  ],
-  "segments": []
+  ]
 }

@@ -7,13 +7,13 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/patrickmn/go-cache"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
-	keyhubclient "github.com/topicuskeyhub/go-keyhub"
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultRecordWithGroup struct {
-	Group  keyhubclient.Group
-	Record keyhubclient.VaultRecord
+	Group  keyhubmodel.Group
+	Record keyhubmodel.VaultRecord
 }
 
 type VaultIndexCache interface {

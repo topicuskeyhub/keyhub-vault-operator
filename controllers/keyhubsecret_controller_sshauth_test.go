@@ -71,7 +71,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: corev1.SecretTypeSSHAuth,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "key", Record: "1001-0002"},
+					{Name: "key", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 
@@ -119,7 +119,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: corev1.SecretTypeSSHAuth,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "key", Record: "1001-0002"},
+					{Name: "key", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 
@@ -165,7 +165,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 1 &&
 					len(keys) == 1 &&
-					records[0].RecordID == "1001-0002" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password" &&
 					keys[0].Key == "ssh-privatekey" &&
 					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey) == nil
@@ -174,7 +174,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			By("By updating the KeyHubSecret")
 			fetchedKeyHubSecret.Spec.Data = []keyhubv1alpha1.SecretKeyReference{
-				{Name: "key", Record: "1001-0008"},
+				{Name: "key", Record: "00000000-0000-0000-1001-000000000008"},
 			}
 			k8sClient.Update(context.Background(), fetchedKeyHubSecret)
 
@@ -204,7 +204,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 1 &&
 					len(keys) == 1 &&
-					records[0].RecordID == "1001-0008" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000008" &&
 					records[0].Name == "key file" &&
 					keys[0].Key == "ssh-privatekey" &&
 					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey) == nil
@@ -235,7 +235,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					},
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "key", Record: "1001-0002"},
+					{Name: "key", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 

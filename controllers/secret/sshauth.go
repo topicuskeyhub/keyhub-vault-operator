@@ -36,12 +36,12 @@ func (sb *secretBuilder) applySSHAuthSecretData(ks *keyhubv1alpha1.KeyHubSecret,
 		return err
 	}
 
-	if len(record.File()) == 0 {
+	if record.File() == nil {
 		return fmt.Errorf("Missing file for record %s", ref.Record)
 	}
 
 	secret.Data = map[string][]byte{
-		corev1.SSHAuthPrivateKey: record.File(),
+		corev1.SSHAuthPrivateKey: *record.File(),
 	}
 
 	ks.Status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}

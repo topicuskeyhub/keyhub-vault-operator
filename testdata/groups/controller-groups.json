@@ -10,9 +10,9 @@
           "href": "https://keyhub.local/keyhub/rest/v1/group/1000"
         }
       ],
-      "uuid": "CTRL-1000",
-      "name": "Controller Policy Group"
+      "uuid": "00000000-0000-0000-1000-000000000000",
+      "name": "Controller Policy Group",
+      "extendedAccess": ""
     }
-  ],
-  "segments": []
+  ]
 }

@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "uuid": "1001-0004",
+      "uuid": "00000000-0000-0000-1001-000000000004",
       "name": "Privatekey",
       "url": "http://example.io",
       "username": "private.example.io",

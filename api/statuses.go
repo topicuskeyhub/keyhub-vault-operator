@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/base64"
 
-	"github.com/topicuskeyhub/go-keyhub"
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
 	"golang.org/x/crypto/bcrypt"
 
@@ -13,7 +13,7 @@ import (
 // SetVaultRecordStatus sets the corresponding status in statuses to the
 // new status based on record.
 // statuses must be non-nil.
-func SetVaultRecordStatus(statuses *[]v1alpha1.VaultRecordStatus, record *keyhub.VaultRecord) {
+func SetVaultRecordStatus(statuses *[]v1alpha1.VaultRecordStatus, record *keyhubmodel.VaultRecord) {
 	if statuses == nil {
 		return
 	}
@@ -57,7 +57,7 @@ func DeleteVaultRecordStatus(statuses []v1alpha1.VaultRecordStatus, recordID str
 	return append(statuses[:d], statuses[d+1:]...)
 }
 
-func IsVaulRecordChanged(statuses []v1alpha1.VaultRecordStatus, record *keyhub.VaultRecord) bool {
+func IsVaulRecordChanged(statuses []v1alpha1.VaultRecordStatus, record *keyhubmodel.VaultRecord) bool {
 	status := FindVaultRecordStatus(statuses, record.UUID)
 	return status == nil || metav1.NewTime(record.LastModifiedAt()).Rfc3339Copy().After(status.LastModifiedAt.Time)
 }

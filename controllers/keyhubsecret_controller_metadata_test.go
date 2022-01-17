@@ -64,7 +64,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 		It("Should handle default labels correctly", func() {
 			spec := keyhubv1alpha1.KeyHubSecretSpec{
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "username", Record: "1001-0002", Property: "username"},
+					{Name: "username", Record: "00000000-0000-0000-1001-000000000002", Property: "username"},
 				},
 			}
 
@@ -130,7 +130,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					},
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "username", Record: "1001-0002", Property: "username"},
+					{Name: "username", Record: "00000000-0000-0000-1001-000000000002", Property: "username"},
 				},
 			}
 
@@ -181,7 +181,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					},
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "username", Record: "1001-0002", Property: "username"},
+					{Name: "username", Record: "00000000-0000-0000-1001-000000000002", Property: "username"},
 				},
 			}
 
