@@ -10,7 +10,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.11.0
 	github.com/topicuskeyhub/go-keyhub v1.0.0
-	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.22.4
 	k8s.io/apimachinery v0.22.4
