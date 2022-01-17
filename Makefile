@@ -27,10 +27,11 @@ all: manager
 
 # Run tests
 ENVTEST_ASSETS_DIR=$(shell pwd)/testbin
+PACKAGES=$(shell go list github.com/topicusonderwijs/keyhub-vault-operator/api github.com/topicusonderwijs/keyhub-vault-operator/controllers/... | grep controllers | grep -v test | tr "\n" ",")
 test: generate fmt vet manifests
 	mkdir -p ${ENVTEST_ASSETS_DIR}
 	test -f ${ENVTEST_ASSETS_DIR}/setup-envtest.sh || curl -sSLo ${ENVTEST_ASSETS_DIR}/setup-envtest.sh https://raw.githubusercontent.com/kubernetes-sigs/controller-runtime/v0.7.0/hack/setup-envtest.sh
-	source ${ENVTEST_ASSETS_DIR}/setup-envtest.sh; fetch_envtest_tools $(ENVTEST_ASSETS_DIR); setup_envtest_env $(ENVTEST_ASSETS_DIR); go test ./... -coverpkg github.com/topicusonderwijs/keyhub-vault-operator/api,github.com/topicusonderwijs/keyhub-vault-operator/controllers/... -covermode atomic -coverprofile cover.out
+	source ${ENVTEST_ASSETS_DIR}/setup-envtest.sh; fetch_envtest_tools $(ENVTEST_ASSETS_DIR); setup_envtest_env $(ENVTEST_ASSETS_DIR); go test ./... -coverpkg=${PACKAGES} -covermode=atomic -coverprofile=cover.out
 
 # Build manager binary
 manager: generate fmt vet
