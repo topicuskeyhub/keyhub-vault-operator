@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	"github.com/go-logr/logr"
+	"github.com/google/uuid"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
 	"gopkg.in/yaml.v2"
@@ -58,7 +60,7 @@ func (pl *policyLoader) Load() (*[]Policy, error) {
 	return &policies, nil
 }
 
-func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhub.Group) error {
+func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhubmodel.Group) error {
 	pl.log.Info("loading group policies", "uuid", group.UUID, "name", group.Name)
 	metrics.KeyHubApiRequests.WithLabelValues("vault", "list").Inc()
 	records, err := pl.client.Vaults.GetRecords(&group)
@@ -67,31 +69,34 @@ func (pl *policyLoader) loadPolicies(policies *[]Policy, group keyhub.Group) err
 	}
 
 	for _, record := range records {
-		if record.Color == "RED" {
+		if record.Color == keyhubmodel.VaultRecordColorRed {
 			continue
 		}
 
+		recordUUID, err := uuid.Parse(record.UUID)
+		if err != nil {
+			return err
+		}
 		metrics.KeyHubApiRequests.WithLabelValues("vault", "get").Inc()
-		rec, err := pl.client.Vaults.GetRecord(&group, record.UUID, keyhub.RecordOptions{Secret: true})
+		rec, err := pl.client.Vaults.GetByUUID(&group, recordUUID, &keyhubmodel.VaultRecordAdditionalQueryParams{Audit: true, Secret: true})
 		if err != nil {
 			return err
 		}
 
-		if rec.Username == "" || rec.Password() == "" || !strings.HasPrefix(rec.Comment(), "policies:") {
+		if rec.Username == "" || rec.Password() == nil || rec.Comment() == nil || !strings.HasPrefix(*rec.Comment(), "policies:") {
 			pl.log.Info("record missing username, password or policy comment", "uuid", rec.UUID)
 			continue
 		}
 
 		comment := comment{}
-		err = yaml.Unmarshal([]byte(rec.Comment()), &comment)
+		err = yaml.Unmarshal([]byte(*rec.Comment()), &comment)
 		if err != nil {
 			pl.log.Info("unmarshal error", "uuid", rec.UUID, "err", err)
 			continue
 		}
-		//fmt.Printf("%v", comment)
 
 		for _, policy := range comment.Policies {
-			*policies = append(*policies, Policy{policy: policy, Credentials: ClientCredentials{ClientID: rec.Username, ClientSecret: rec.Password()}})
+			*policies = append(*policies, Policy{policy: policy, Credentials: ClientCredentials{ClientID: rec.Username, ClientSecret: *rec.Password()}})
 		}
 	}
 

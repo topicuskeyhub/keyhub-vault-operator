@@ -14,7 +14,7 @@ import (
 	// "golang.org/x/crypto/bcrypt"
 	pkcs12 "software.sslmate.com/src/go-pkcs12"
 
-	"github.com/topicuskeyhub/go-keyhub"
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicusonderwijs/keyhub-vault-operator/api"
 	"github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
 	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
@@ -117,17 +117,25 @@ func (sb *secretBuilder) loadCertificateBundle(keyhubSecretName types.Namespaced
 	status.VaultRecordStatuses = []keyhubv1alpha1.VaultRecordStatus{}
 	api.SetVaultRecordStatus(&status.VaultRecordStatuses, record)
 
+	if record.File() == nil {
+		return nil, nil, nil, fmt.Errorf("Missing file for record %s", ref.Record)
+	}
+
 	switch ref.Name {
 	case "pem":
-		return sb.parsePEM(record.File(), record.Password())
+		return sb.parsePEM(*record.File())
 	case "pkcs12":
-		return pkcs12.DecodeChain(record.File(), record.Password())
+		pwd := ""
+		if record.Password() != nil {
+			pwd = *record.Password()
+		}
+		return pkcs12.DecodeChain(*record.File(), pwd)
 	default:
 		return nil, nil, nil, fmt.Errorf("Unsupported certificate bundle type: %s", ref.Name)
 	}
 }
 
-func (sb *secretBuilder) parsePEM(pemData []byte, password string) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
+func (sb *secretBuilder) parsePEM(pemData []byte) (privateKey interface{}, certificate *x509.Certificate, caCerts []*x509.Certificate, err error) {
 	certificates, err := certUtil.ParseCertsPEM(pemData)
 	if err != nil {
 		return nil, nil, nil, err
@@ -216,11 +224,11 @@ func (sb *secretBuilder) loadCertificateBlocks(keyhubSecretName types.Namespaced
 		return nil, nil, nil, err
 	}
 
-	if len(privateKeyRecord.File()) == 0 {
+	if privateKeyRecord.File() == nil {
 		return nil, nil, nil, fmt.Errorf("Missing file for record %s", privateKeyRef.Record)
 	}
 
-	if privateKey, err = keyUtil.ParsePrivateKeyPEM(privateKeyRecord.File()); err != nil {
+	if privateKey, err = keyUtil.ParsePrivateKeyPEM(*privateKeyRecord.File()); err != nil {
 		return nil, nil, nil, err
 	}
 
@@ -231,24 +239,24 @@ func (sb *secretBuilder) loadCertificateBlocks(keyhubSecretName types.Namespaced
 		return nil, nil, nil, err
 	}
 
-	if len(certificateRecord.File()) == 0 {
+	if certificateRecord.File() == nil {
 		return nil, nil, nil, fmt.Errorf("Missing file for record %s", certificateRef.Record)
 	}
 
-	certificates, err := certUtil.ParseCertsPEM(certificateRecord.File())
+	certificates, err := certUtil.ParseCertsPEM(*certificateRecord.File())
 	if err != nil {
 		return nil, nil, nil, err
 	}
 
 	api.SetVaultRecordStatus(&status.VaultRecordStatuses, certificateRecord)
 
-	var caCertsRecord *keyhub.VaultRecord
+	var caCertsRecord *keyhubmodel.VaultRecord
 	if caCertsRef.Name != "" {
 		if caCertsRecord, err = sb.retriever.Get(caCertsIdxEntry); err != nil {
 			return nil, nil, nil, err
 		}
 
-		if len(caCertsRecord.File()) == 0 {
+		if caCertsRecord.File() == nil {
 			return nil, nil, nil, fmt.Errorf("Missing file for record %s", caCertsRef.Record)
 		}
 
@@ -258,7 +266,7 @@ func (sb *secretBuilder) loadCertificateBlocks(keyhubSecretName types.Namespaced
 	if len(certificates) == 1 {
 		certificate = certificates[0]
 		if caCertsRef.Name != "" {
-			if caCerts, err = certUtil.ParseCertsPEM(caCertsRecord.File()); err != nil {
+			if caCerts, err = certUtil.ParseCertsPEM(*caCertsRecord.File()); err != nil {
 				return nil, nil, nil, err
 			}
 		}

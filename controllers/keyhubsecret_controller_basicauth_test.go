@@ -71,7 +71,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: corev1.SecretTypeBasicAuth,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "auth", Record: "1001-0002"},
+					{Name: "auth", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 
@@ -120,7 +120,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: corev1.SecretTypeBasicAuth,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "auth", Record: "1001-0002"},
+					{Name: "auth", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 
@@ -170,7 +170,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 1 &&
 					len(keys) == 2 &&
-					records[0].RecordID == "1001-0002" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password" &&
 					keys[0].Key == "username" &&
 					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey0) == nil &&
@@ -181,7 +181,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			By("By updating the KeyHubSecret")
 			fetchedKeyHubSecret.Spec.Data = []keyhubv1alpha1.SecretKeyReference{
-				{Name: "auth", Record: "1001-0003"},
+				{Name: "auth", Record: "00000000-0000-0000-1001-000000000003"},
 			}
 			manifestToLog = fetchedKeyHubSecret
 			k8sClient.Update(context.Background(), fetchedKeyHubSecret)
@@ -216,7 +216,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 1 &&
 					len(keys) == 2 &&
-					records[0].RecordID == "1001-0003" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000003" &&
 					records[0].Name == "Certificate" &&
 					keys[0].Key == "username" &&
 					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey0) == nil &&
@@ -249,7 +249,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					},
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "auth", Record: "1001-0002"},
+					{Name: "auth", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 

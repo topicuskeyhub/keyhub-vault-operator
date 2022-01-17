@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "uuid": "1000-5000",
+      "uuid": "00000000-0000-0000-1000-000000000001",
       "name": "Controller API Key",
       "url": "",
       "username": "",
@@ -12,7 +12,7 @@
       ]
     },
     {
-      "uuid": "1000-5001",
+      "uuid": "00000000-0000-0000-1000-000000000002",
       "name": "Controller Client 1",
       "url": "",
       "username": "",

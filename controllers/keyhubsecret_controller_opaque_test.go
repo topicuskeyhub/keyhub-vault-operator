@@ -65,13 +65,13 @@ var _ = Describe("KeyHubSecret Controller", func() {
 		It("Should handle keys correctly", func() {
 			spec := keyhubv1alpha1.KeyHubSecretSpec{
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "username", Record: "1001-0002", Property: "username"},
-					{Name: "password", Record: "1001-0002", Property: "password"},
-					{Name: "password_by_default", Record: "1001-0002"},
-					{Name: "link", Record: "1001-0002", Property: "link"},
-					{Name: "file", Record: "1001-0002", Property: "file"},
-					{Name: "lastModifiedAt", Record: "1001-0002", Property: "lastModifiedAt"},
-					{Name: "bcrypt", Record: "1001-0002", Property: "password", Format: "bcrypt"},
+					{Name: "username", Record: "00000000-0000-0000-1001-000000000002", Property: "username"},
+					{Name: "password", Record: "00000000-0000-0000-1001-000000000002", Property: "password"},
+					{Name: "password_by_default", Record: "00000000-0000-0000-1001-000000000002"},
+					{Name: "link", Record: "00000000-0000-0000-1001-000000000002", Property: "link"},
+					{Name: "file", Record: "00000000-0000-0000-1001-000000000002", Property: "file"},
+					{Name: "lastModifiedAt", Record: "00000000-0000-0000-1001-000000000002", Property: "lastModifiedAt"},
+					{Name: "bcrypt", Record: "00000000-0000-0000-1001-000000000002", Property: "password", Format: "bcrypt"},
 				},
 			}
 
@@ -95,6 +95,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 			fetched := &corev1.Secret{}
 			Eventually(func() bool {
 				k8sClient.Get(context.Background(), key, fetched)
+				manifestToLog = fetched
 
 				validHash := bcrypt.CompareHashAndPassword(fetched.Data["bcrypt"], []byte("test1234"))
 
@@ -108,6 +109,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					string(fetched.Data["lastModifiedAt"]) == "2020-01-01T16:00:30Z" &&
 					validHash == nil
 			}, timeout, interval).Should(BeTrue())
+			manifestToLog = nil
 
 			By("By checking the KeyHubSecret status")
 			fetchedKeyHubSecret := &keyhubv1alpha1.KeyHubSecret{}
@@ -120,7 +122,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 1 &&
 					len(keys) == 7 &&
-					records[0].RecordID == "1001-0002" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password"
 			}, timeout, interval).Should(BeTrue())
 			manifestToLog = nil
@@ -141,8 +143,8 @@ var _ = Describe("KeyHubSecret Controller", func() {
 		It("Should handle KeyHubSecret updates correctly", func() {
 			spec := keyhubv1alpha1.KeyHubSecretSpec{
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "username", Record: "1001-0002", Property: "username"},
-					{Name: "pkey", Record: "1001-0004", Property: "username"},
+					{Name: "username", Record: "00000000-0000-0000-1001-000000000002", Property: "username"},
+					{Name: "pkey", Record: "00000000-0000-0000-1001-000000000004", Property: "username"},
 				},
 			}
 
@@ -189,9 +191,9 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					return false
 				}
 
-				return records[0].RecordID == "1001-0002" &&
+				return records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password" &&
-					records[1].RecordID == "1001-0004" &&
+					records[1].RecordID == "00000000-0000-0000-1001-000000000004" &&
 					records[1].Name == "Privatekey" &&
 					keys[0].Key == "username" &&
 					len(keys[0].Hash) > 0 &&
@@ -222,8 +224,8 @@ var _ = Describe("KeyHubSecret Controller", func() {
 			fetchedKeyHubSecret = &keyhubv1alpha1.KeyHubSecret{}
 			k8sClient.Get(context.Background(), key, fetchedKeyHubSecret)
 			fetchedKeyHubSecret.Spec.Data = []keyhubv1alpha1.SecretKeyReference{
-				{Name: "username", Record: "1001-0003", Property: "username"},
-				{Name: "cacerts", Record: "1001-0005", Property: "username"},
+				{Name: "username", Record: "00000000-0000-0000-1001-000000000003", Property: "username"},
+				{Name: "cacerts", Record: "00000000-0000-0000-1001-000000000005", Property: "username"},
 			}
 			k8sClient.Update(context.Background(), fetchedKeyHubSecret)
 
@@ -254,9 +256,9 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					return false
 				}
 
-				return records[0].RecordID == "1001-0003" &&
+				return records[0].RecordID == "00000000-0000-0000-1001-000000000003" &&
 					records[0].Name == "Certificate" &&
-					records[1].RecordID == "1001-0005" &&
+					records[1].RecordID == "00000000-0000-0000-1001-000000000005" &&
 					records[1].Name == "CA Certs" &&
 					keys[0].Key == "username" &&
 					len(keys[0].Hash) > 0 &&
