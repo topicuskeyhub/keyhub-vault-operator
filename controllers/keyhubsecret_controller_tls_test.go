@@ -68,8 +68,8 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: corev1.SecretTypeTLS,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "tls.crt", Record: "1001-0003"},
-					{Name: "tls.key", Record: "1001-0004"},
+					{Name: "tls.crt", Record: "00000000-0000-0000-1001-000000000003"},
+					{Name: "tls.key", Record: "00000000-0000-0000-1001-000000000004"},
 				},
 			}
 
@@ -129,9 +129,9 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				return len(records) == 2 &&
 					len(keys) == 2 &&
-					records[0].RecordID == "1001-0004" &&
+					records[0].RecordID == "00000000-0000-0000-1001-000000000004" &&
 					records[0].Name == "Privatekey" &&
-					records[1].RecordID == "1001-0003" &&
+					records[1].RecordID == "00000000-0000-0000-1001-000000000003" &&
 					records[1].Name == "Certificate" &&
 					keys[0].Key == corev1.TLSCertKey &&
 					keys[1].Key == corev1.TLSPrivateKeyKey
@@ -158,9 +158,9 @@ var _ = Describe("KeyHubSecret Controller", func() {
 				Type: corev1.SecretTypeTLS,
 			},
 			Data: []keyhubv1alpha1.SecretKeyReference{
-				{Name: "tls.crt", Record: "1001-0003"},
-				{Name: "tls.key", Record: "1001-0004"},
-				{Name: "ca.crt", Record: "1001-0005"},
+				{Name: "tls.crt", Record: "00000000-0000-0000-1001-000000000003"},
+				{Name: "tls.key", Record: "00000000-0000-0000-1001-000000000004"},
+				{Name: "ca.crt", Record: "00000000-0000-0000-1001-000000000005"},
 			},
 		}
 
@@ -209,11 +209,11 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			return len(records) == 3 &&
 				len(keys) == 2 &&
-				records[0].RecordID == "1001-0004" &&
+				records[0].RecordID == "00000000-0000-0000-1001-000000000004" &&
 				records[0].Name == "Privatekey" &&
-				records[1].RecordID == "1001-0003" &&
+				records[1].RecordID == "00000000-0000-0000-1001-000000000003" &&
 				records[1].Name == "Certificate" &&
-				records[2].RecordID == "1001-0005" &&
+				records[2].RecordID == "00000000-0000-0000-1001-000000000005" &&
 				records[2].Name == "CA Certs" &&
 				keys[0].Key == corev1.TLSCertKey &&
 				keys[1].Key == corev1.TLSPrivateKeyKey
@@ -239,7 +239,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 				Type: corev1.SecretTypeTLS,
 			},
 			Data: []keyhubv1alpha1.SecretKeyReference{
-				{Name: "pem", Record: "1001-0006"},
+				{Name: "pem", Record: "00000000-0000-0000-1001-000000000006"},
 			},
 		}
 
@@ -288,7 +288,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			return len(records) == 1 &&
 				len(keys) == 2 &&
-				records[0].RecordID == "1001-0006" &&
+				records[0].RecordID == "00000000-0000-0000-1001-000000000006" &&
 				records[0].Name == "PEM" &&
 				keys[0].Key == corev1.TLSCertKey &&
 				keys[1].Key == corev1.TLSPrivateKeyKey
@@ -314,7 +314,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 				Type: corev1.SecretTypeTLS,
 			},
 			Data: []keyhubv1alpha1.SecretKeyReference{
-				{Name: "pem", Record: "1001-0007"},
+				{Name: "pem", Record: "00000000-0000-0000-1001-000000000007"},
 			},
 		}
 
@@ -365,7 +365,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			return len(records) == 1 &&
 				len(keys) == 2 &&
-				records[0].RecordID == "1001-0007" &&
+				records[0].RecordID == "00000000-0000-0000-1001-000000000007" &&
 				records[0].Name == "PEM WITH CHAIN" &&
 				keys[0].Key == corev1.TLSCertKey &&
 				keys[1].Key == corev1.TLSPrivateKeyKey
@@ -391,7 +391,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 				Type: corev1.SecretTypeTLS,
 			},
 			Data: []keyhubv1alpha1.SecretKeyReference{
-				{Name: "pkcs12", Record: "1001-0009"},
+				{Name: "pkcs12", Record: "00000000-0000-0000-1001-000000000009"},
 			},
 		}
 
@@ -442,7 +442,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			return len(records) == 1 &&
 				len(keys) == 2 &&
-				records[0].RecordID == "1001-0009" &&
+				records[0].RecordID == "00000000-0000-0000-1001-000000000009" &&
 				records[0].Name == "PKCS#12 without CA chain" &&
 				keys[0].Key == corev1.TLSCertKey &&
 				keys[1].Key == corev1.TLSPrivateKeyKey
@@ -468,7 +468,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 				Type: corev1.SecretTypeTLS,
 			},
 			Data: []keyhubv1alpha1.SecretKeyReference{
-				{Name: "pkcs12", Record: "1001-0010"},
+				{Name: "pkcs12", Record: "00000000-0000-0000-1001-000000000010"},
 			},
 		}
 
@@ -519,7 +519,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 			return len(records) == 1 &&
 				len(keys) == 2 &&
-				records[0].RecordID == "1001-0010" &&
+				records[0].RecordID == "00000000-0000-0000-1001-000000000010" &&
 				records[0].Name == "PKCS#12 with CA chain" &&
 				keys[0].Key == corev1.TLSCertKey &&
 				keys[1].Key == corev1.TLSPrivateKeyKey

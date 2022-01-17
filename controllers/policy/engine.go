@@ -69,6 +69,7 @@ func (pe *policyEngine) GetClient(secret *keyhubv1alpha1.KeyHubSecret) (*keyhub.
 			if err != nil {
 				return nil, err
 			}
+
 			pe.clientCache.SetDefault(clientID, client)
 		}
 	}

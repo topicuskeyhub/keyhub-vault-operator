@@ -63,11 +63,11 @@ func (sb *secretBuilder) applyApachePasswordFile(ks *keyhubv1alpha1.KeyHubSecret
 			return fmt.Errorf("Username field of record %s is empty", idxEntry.Record.UUID)
 		}
 
-		if len(record.Password()) == 0 {
+		if record.Password() == nil {
 			return fmt.Errorf("Password field of record %s is empty", idxEntry.Record.UUID)
 		}
 
-		pwdHash, err := bcrypt.GenerateFromPassword([]byte(record.Password()), bcrypt.DefaultCost)
+		pwdHash, err := bcrypt.GenerateFromPassword([]byte(*record.Password()), bcrypt.DefaultCost)
 		if err != nil {
 			continue
 		}

@@ -18,11 +18,14 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -41,6 +44,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	ctrl "sigs.k8s.io/controller-runtime"
+
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 
 	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
@@ -169,9 +174,9 @@ func newKeyHubMockServer() *httptest.Server {
 
 	v1.HandleFunc("/info", routeInfo)
 
-	v1.HandleFunc("/group", routeGroups)
-	v1.HandleFunc("/group/{id:[0-9]+}/vault/record", routeVaultRecord).Queries("additional", "{additional}", "uuid", "{group:[\\w]+}-{uuid:[\\w]+}")
-	v1.HandleFunc("/group/{id:[0-9]+}/vault/record", routeVaultRecords).Queries("additional", "audit")
+	v1.HandleFunc("/group/", routeGroups)
+	v1.HandleFunc("/group/{id:[0-9A-z-]+}/vault/record", routeVaultRecord).Queries("additional", "", "uuid", "{uuid:[\\w-]+}")
+	v1.HandleFunc("/group/{id:[0-9A-z-]+}/vault/record", routeVaultRecords).Queries("additional", "audit")
 
 	rtr.Use(onRequestBegin)
 
@@ -181,14 +186,25 @@ func newKeyHubMockServer() *httptest.Server {
 func onRequestBegin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		fmt.Println("Begin request", "method", r.Method, "path", r.URL.Path, "params", vars)
+		fmt.Println("Begin request", "method", r.Method, "path", r.URL.Path, "query", r.URL.RawQuery, "params", vars)
 		next.ServeHTTP(w, r)
 	})
 }
 
 func routeDefault(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("No route found", r.URL.Path)
-	w.WriteHeader(http.StatusNotFound)
+	os.Stderr.WriteString("No route found: " + r.URL.Path)
+	errReport := keyhubmodel.ErrorReport{Code: http.StatusNotFound}
+	errReportBytes, err := json.Marshal(errReport)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Add("Status Code", strconv.Itoa(http.StatusNotFound))
+	w.Write(errReportBytes)
+
+	// w.WriteHeader(http.StatusNotFound)
 }
 
 func routeInfo(w http.ResponseWriter, r *http.Request) {
@@ -251,13 +267,11 @@ func routeVaultRecords(w http.ResponseWriter, r *http.Request) {
 }
 
 func routeVaultRecord(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("record request detected")
 	vars := mux.Vars(r)
 	group := vars["id"]
 	record := vars["uuid"]
 
-	fmt.Println("record request", group, record)
-	file := "../testdata/records/group_" + group + "_record_" + record + ".json"
+	file := "../testdata/records/group_" + group + "_record_" + record[len(record)-4:] + ".json"
 
 	writeJSONResponse(w, file)
 }
@@ -331,5 +345,13 @@ func testAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("no uri match")
-	w.WriteHeader(http.StatusNotFound)
+
+	errReport := keyhubmodel.ErrorReport{Code: 404}
+	errReportBytes, err := json.Marshal(errReport)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	w.Header().Add("Status Code", "404")
+	w.Write(errReportBytes)
 }

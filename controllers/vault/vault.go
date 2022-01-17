@@ -2,12 +2,14 @@ package vault
 
 import (
 	"github.com/go-logr/logr"
+	"github.com/google/uuid"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
+	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultSecretRetriever interface {
-	Get(record VaultRecordWithGroup) (*keyhub.VaultRecord, error)
+	Get(record VaultRecordWithGroup) (*keyhubmodel.VaultRecord, error)
 }
 
 type vaultSecretRetriever struct {
@@ -22,11 +24,15 @@ func NewVaultSecretRetriever(log logr.Logger, client *keyhub.Client) VaultSecret
 	}
 }
 
-func (r *vaultSecretRetriever) Get(idxEntry VaultRecordWithGroup) (*keyhub.VaultRecord, error) {
+func (r *vaultSecretRetriever) Get(idxEntry VaultRecordWithGroup) (*keyhubmodel.VaultRecord, error) {
 	metrics.KeyHubApiRequests.WithLabelValues("vault", "get").Inc()
-	return r.client.Vaults.GetRecord(
+	uuid, err := uuid.Parse(idxEntry.Record.UUID)
+	if err != nil {
+		return nil, err
+	}
+	return r.client.Vaults.GetByUUID(
 		&idxEntry.Group,
-		idxEntry.Record.UUID,
-		keyhub.RecordOptions{Secret: true, Audit: true},
+		uuid,
+		&keyhubmodel.VaultRecordAdditionalQueryParams{Secret: true, Audit: true},
 	)
 }

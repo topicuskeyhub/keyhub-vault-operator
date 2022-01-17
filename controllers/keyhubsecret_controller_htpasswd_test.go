@@ -68,7 +68,7 @@ var _ = Describe("KeyHubSecret Controller", func() {
 					Type: keyhubv1alpha1.SecretTypeApachePasswordFile,
 				},
 				Data: []keyhubv1alpha1.SecretKeyReference{
-					{Name: "auth", Record: "1001-0002"},
+					{Name: "auth", Record: "00000000-0000-0000-1001-000000000002"},
 				},
 			}
 
