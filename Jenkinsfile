@@ -22,6 +22,13 @@ node() {
       kubebuilder.inside() {
         sh("make test")
       }
+
+      go.convertCoverageReport { }
+
+      reportIssues(
+        stage: '',
+        profile: 'golang'
+      )
     }
     
     if (isPrimaryBranch || releaseTags) {

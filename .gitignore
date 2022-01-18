@@ -1,4 +1,5 @@
 bin/
 testbin/bin
 cover.*
+report.xml
 keyhub-vault-operator
