@@ -1,5 +1,4 @@
 ---
-layout: page
 title: "Topicus KeyHub Vault Operator"
 ---
 
