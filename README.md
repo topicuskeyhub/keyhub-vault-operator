@@ -1,3 +1,5 @@
+![GitHub](https://img.shields.io/github/license/topicuskeyhub/keyhub-vault-operator)
+
 ![Topicus KeyHub](assets/keyhub.png)
 
 # Topicus KeyHub Vault Operator

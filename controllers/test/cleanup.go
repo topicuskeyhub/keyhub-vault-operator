@@ -1,3 +1,6 @@
+// Copyright 2021 Topicus Security BV
+// SPDX-License-Identifier: Apache-2.0
+
 package controllers_test
 
 import (
