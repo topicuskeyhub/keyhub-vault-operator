@@ -1,6 +1,9 @@
-## User Guide
+---
+title: Topics KeyHub Vault Operator
+description: User Guide
+---
 
-### Secret synchronization
+## Secret synchronization
 
 Every Kubernetes cluster runs a `keyhub-secrets-controller`, which is responsible for syncing secrets from KeyHub to Kubernetes. Secrets will be automatically synchronized with a 10 minute interval. In case of an error the retry interval is 2 minutes.
 
@@ -88,7 +91,7 @@ spec:
   ...
 ```
 
-#### Basic authentication
+### Basic authentication
 A `kubernetes.io/basic-auth` secret uses the username and password fields from the vault record. E.g.:
 ```yaml
 apiVersion: keyhub.topicus.nl/v1alpha1
@@ -103,7 +106,7 @@ spec:
       record: "<KeyHub vault record uuid>"
 ```
 
-#### SSH authentication
+### SSH authentication
 A `kubernetes.io/ssh-auth` secret requires a PEM formatted file containing just the private-key. E.g.:
 ```yaml
 apiVersion: keyhub.topicus.nl/v1alpha1
@@ -118,9 +121,9 @@ spec:
       record: "<KeyHub vault record uuid>"
 ```
 
-#### TLS Secrets
+### TLS Secrets
 
-##### Using multiple KeyHub vault records
+#### Using multiple KeyHub vault records
 
 If the certificate and key are stored in different vault records, they have to be added using the names `tls.crt` and `tls.key`, e.g.:
 ```yaml
@@ -146,7 +149,7 @@ Optionally a CA certificate chain can be defined with the `ca.crt` field. The CA
       record: "<KeyHub key vault record uuid>"
 ```
 
-##### Using a single KeyHub vault record
+#### Using a single KeyHub vault record
 
 To store the certificate and key in a single vault record, they have to be included in a certificate container. Currently the `PEM` and `PKCS#12` container formats are supported. The name field identifies the container format and has to be `pem` or `pkcs12`, e.g.:
 ```yaml
@@ -175,7 +178,7 @@ To have a seperate field in the generated `Secret` resource containing the CA ce
       format: tls.ca
 ```
 
-#### Labels and annotations
+### Labels and annotations
 Helm [standard labels](https://helm.sh/docs/chart_best_practices/labels/#standard-labels) set on the `KeyHubSecret` CR are automatically set on the generated secret.
 
 To overwrite standard labels or to set custom labels and annotations on the generated secret use the metadata field of the spec template, e.g.:
@@ -211,7 +214,7 @@ data:
   my_secret: ...
 ```
 
-### Synchronization status
+## Synchronization status
 The sync status of a `KeyHubSecret` CR can be inspected with `kubectl`:
 ```console
 $ kubectl get keyhubsecrets.keyhub.topicus.nl
