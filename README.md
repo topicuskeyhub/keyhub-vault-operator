@@ -6,7 +6,7 @@
 Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 
 ## Documentation
-To learn more about using KeyHub as a Kubernetes secret store go to [this article](https://kb.topicus.education/docs/devops/kubernetes/keyhub/) in our Knowledge Base.
+See docs directory.
 
 ## Getting started
 Run the operator locally. Make sure you are connecting to your local minikube cluster!
