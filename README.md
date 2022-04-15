@@ -1,3 +1,5 @@
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/topicuskeyhub/keyhub-vault-operator)
+![Go](https://img.shields.io/github/go-mod/go-version/topicuskeyhub/keyhub-vault-operator)
 ![GitHub](https://img.shields.io/github/license/topicuskeyhub/keyhub-vault-operator)
 
 ![Topicus KeyHub](assets/keyhub.png)
