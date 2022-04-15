@@ -10,7 +10,7 @@ Use this Kubernetes operator to synchronize secrets stored in Topicus KeyHub vau
 
 ## Operator Manual
 
-To learn about setting up the operator and allowing it access to Topicus KeyHub read the [operator manual.md](operator-manual.md).
+To learn about setting up the operator and allowing it access to Topicus KeyHub read the [operator manual](operator-manual.md).
 
 ## User Guide
 
