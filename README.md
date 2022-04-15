@@ -8,7 +8,7 @@
 Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 
 ## Documentation
-See docs directory.
+The documentation can be found [here](https://topicuskeyhub.github.io/keyhub-vault-operator/).
 
 ## Getting started
 Run the operator locally. Make sure you are connecting to your local minikube cluster!
