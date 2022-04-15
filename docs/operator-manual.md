@@ -1,6 +1,6 @@
 ---
 title: Topics KeyHub Vault Operator
-description: Operator guide
+description: Operator Manual
 ---
 
 ## Overview
