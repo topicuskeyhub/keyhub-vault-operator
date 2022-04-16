@@ -1,7 +1,7 @@
 domain: topicus.nl
 layout: go.kubebuilder.io/v3
 projectName: keyhub-vault-operator
-repo: github.com/topicusonderwijs/keyhub-vault-operator
+repo: github.com/topicuskeyhub/keyhub-vault-operator
 resources:
 - crdVersion: v1
   group: keyhub
