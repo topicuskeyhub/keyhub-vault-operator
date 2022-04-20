@@ -1,5 +1,5 @@
 ---
-title: Topics KeyHub Vault Operator
+title: Topicus KeyHub Vault Operator
 description: User Guide
 ---
 
