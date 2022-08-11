@@ -1,6 +1,6 @@
 module github.com/topicusonderwijs/keyhub-vault-operator
 
-go 1.16
+go 1.19
 
 require (
 	github.com/go-logr/logr v0.4.0
