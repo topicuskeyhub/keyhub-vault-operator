@@ -1,0 +1,41 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    ":enableRenovate",
+    "config:base",
+    ":disableRateLimiting",
+    ":disableDependencyDashboard",
+    ":semanticCommits",
+    ":separatePatchReleases",
+  ],
+  platform: "github",
+  username: "Renovate Bot for KeyHub",
+  repositories: ["topicuskeyhub/keyhub-vault-operator"],
+  onboarding: false,
+  requireConfig: false,
+  gitAuthor: "renovate-bot <renovate-bot[bot]@users.noreply.github.com>",   
+  labels: ["dependencies"],
+  enabledManagers: ["github-actions", "gomod"],
+  packageRules: [
+    {
+      "matchPackagePatterns": ["^github.com/go-logr/logr"],
+      "allowedVersions": "/^v0\\./"
+    },
+    {
+      "matchPackagePatterns": ["^k8s.io/client-go"],
+      "allowedVersions": "/^v0\\./"
+    },
+    {
+      "groupName": "k8s deps",
+      "matchPackagePatterns": ["^k8s.io/", "^sigs.k8s.io/"]
+    },
+    {
+      "groupName": "prometheus deps",
+      "matchPackagePatterns": ["^github.com/prometheus/"]
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ]
+}
