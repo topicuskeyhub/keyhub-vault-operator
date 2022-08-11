@@ -39,7 +39,7 @@ jobs:
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
       - name: push
-        uses: github-actions-x/commit@v2.8
+        uses: github-actions-x/commit@v2.9
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
