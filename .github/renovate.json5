@@ -36,6 +36,10 @@
     {
       "matchUpdateTypes": ["patch"],
       "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["actions"]
     }
   ]
 }
