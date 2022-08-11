@@ -1,0 +1,26 @@
+name: Renovate
+
+on:
+  - workflow_dispatch
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get token
+        id: get_token
+        uses: machine-learning-apps/actions-app-token@master
+        with:
+          APP_PEM: ${{ secrets.RENOVATE_APP_PEM }}
+          APP_ID: ${{ secrets.RENOVATE_APP_ID }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update dependencies
+        uses: renovatebot/github-action@v32.37.2
+        with:
+          configurationFile: .github/renovate-config.js
+          token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
+        env:
+          LOG_LEVEL: 'debug'

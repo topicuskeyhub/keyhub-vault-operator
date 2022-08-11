@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>topicusonderwijs/renovate-config"],
-  "enabledManagers": ["gomod"],
+  "extends": [":disableDependencyDashboard"],
+  "labels": ["dependencies"],
+  "semanticCommits": "enabled",
+  "enabledManagers": ["github-actions", "gomod"],
   "packageRules": [
     {
       "matchPackagePatterns": ["^github.com/go-logr/logr"],
@@ -20,8 +22,8 @@
       "matchPackagePatterns": ["^github.com/prometheus/"]
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": false
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
     }
   ]
 }
