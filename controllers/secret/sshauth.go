@@ -6,8 +6,8 @@ package secret
 import (
 	"fmt"
 
-	"github.com/topicusonderwijs/keyhub-vault-operator/api"
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/api"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 )
 

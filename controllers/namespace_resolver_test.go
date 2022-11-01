@@ -11,9 +11,9 @@ import (
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	controllers_test "github.com/topicusonderwijs/keyhub-vault-operator/controllers/test"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	controllers_test "github.com/topicuskeyhub/keyhub-vault-operator/controllers/test"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
