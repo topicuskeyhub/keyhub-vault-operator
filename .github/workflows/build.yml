@@ -29,3 +29,11 @@ jobs:
 
     - name: Build
       run: make docker-build
+      env:
+        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:latest
+
+    - name: Build
+      if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/')
+      run: make docker-push
+      env:
+        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:latest
