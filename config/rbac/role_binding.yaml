@@ -8,5 +8,5 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: keyhub-vault-operator-controller-manager
+  name: controller-manager
   namespace: system
