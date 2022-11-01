@@ -1,4 +1,4 @@
-module github.com/topicusonderwijs/keyhub-vault-operator
+module github.com/topicuskeyhub/keyhub-vault-operator
 
 go 1.19
 

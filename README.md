@@ -40,7 +40,7 @@ kind: Kustomization
 namespace: keyhub-vault-operator
 
 resources:
-- ssh://github.com/topicusonderwijs/keyhub-vault-operator//config/default?ref=main
+- ssh://github.com/topicuskeyhub/keyhub-vault-operator//config/default?ref=main
 ```
 
 ## Release
