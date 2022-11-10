@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultSecretRetriever interface {

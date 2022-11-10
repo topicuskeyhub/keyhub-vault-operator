@@ -18,11 +18,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/secret"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/secret"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
 )
 
 const (
@@ -44,6 +44,9 @@ type KeyHubSecretReconciler struct {
 // +kubebuilder:rbac:groups=keyhub.topicus.nl,resources=keyhubsecrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=keyhub.topicus.nl,resources=keyhubsecrets/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=keyhub.topicus.nl,resources=keyhubsecrets/finalizers,verbs=update
+
+// +kubebuilder:rbac:groups=,resources=namespaces,verbs=get;list;watch
+// +kubebuilder:rbac:groups=,resources=secrets,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

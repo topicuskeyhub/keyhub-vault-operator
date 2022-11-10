@@ -5,18 +5,15 @@ package controllers
 
 import (
 	"context"
-	"fmt"
-	"strings"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	controllers_test "github.com/topicusonderwijs/keyhub-vault-operator/controllers/test"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	controllers_test "github.com/topicuskeyhub/keyhub-vault-operator/controllers/test"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
@@ -30,24 +27,24 @@ var _ = Describe("Namespace Policy Resolver", func() {
 		cfg := controllers_test.BeforeEachInputs{Client: k8sClient}
 		controllers_test.CleanUp(&cfg)
 
-		ns := &corev1.NamespaceList{}
-		k8sClient.List(context.Background(), ns)
-		for _, obj := range ns.Items {
-			if strings.HasPrefix(obj.Name, "resolver1-test-") {
-				fmt.Println("removing namespace", "name", obj.Name)
-				Eventually(func() error {
-					return k8sClient.Delete(context.Background(), &obj)
-				}, timeout, interval).Should(Succeed())
-				// Stuck in deleting > 30 secs
-				// Eventually(func() error {
-				// 	return k8sClient.Get(
-				// 		context.Background(),
-				// 		types.NamespacedName{Name: obj.Name},
-				// 		&corev1.Namespace{},
-				// 	)
-				// }, timeout*3, interval).ShouldNot(BeNil())
-			}
-		}
+		// ns := &corev1.NamespaceList{}
+		// k8sClient.List(context.Background(), ns)
+		// for _, obj := range ns.Items {
+		// 	if strings.HasPrefix(obj.Name, "resolver1-test-") {
+		// 		fmt.Println("removing namespace", "name", obj.Name)
+		// 		Eventually(func() error {
+		// 			return k8sClient.Delete(context.Background(), &obj)
+		// 		}, timeout, interval).Should(Succeed())
+		// 		// Stuck in deleting > 30 secs
+		// 		// Eventually(func() error {
+		// 		// 	return k8sClient.Get(
+		// 		// 		context.Background(),
+		// 		// 		types.NamespacedName{Name: obj.Name},
+		// 		// 		&corev1.Namespace{},
+		// 		// 	)
+		// 		// }, timeout*3, interval).ShouldNot(BeNil())
+		// 	}
+		// }
 	})
 
 	Context("No policy match", func() {
@@ -249,17 +246,17 @@ var _ = Describe("Namespace Policy Resolver", func() {
 			}
 
 			// Wait for namespaces to be available
-			fetched := &corev1.Namespace{}
-			for _, ns := range nsl.Items {
-				key := types.NamespacedName{
-					Name: ns.Name,
-				}
-				Eventually(func() bool {
-					k8sClient.Get(context.Background(), key, fetched)
-					return len(fetched.Labels) == 1
-				}, timeout, interval).Should(BeTrue())
+			// fetched := &corev1.Namespace{}
+			// for _, ns := range nsl.Items {
+			// 	key := types.NamespacedName{
+			// 		Name: ns.Name,
+			// 	}
+			// 	Eventually(func() bool {
+			// 		k8sClient.Get(context.Background(), key, fetched)
+			// 		return len(fetched.Labels) == 1
+			// 	}, timeout, interval).Should(BeTrue())
 
-			}
+			// }
 
 			By("By resolving the policy for a KeyHubSecret in a labeled namespace")
 			ks := &keyhubv1alpha1.KeyHubSecret{

@@ -14,14 +14,14 @@ import (
 	. "github.com/onsi/gomega"
 	"golang.org/x/crypto/bcrypt"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	controllerMetrics "github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	controllerMetrics "github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/metrics"
 
-	controllers_test "github.com/topicusonderwijs/keyhub-vault-operator/controllers/test"
+	controllers_test "github.com/topicuskeyhub/keyhub-vault-operator/controllers/test"
 )
 
 var _ = Describe("KeyHubSecret Controller", func() {
