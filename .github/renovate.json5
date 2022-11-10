@@ -13,7 +13,7 @@
   repositories: ["topicuskeyhub/keyhub-vault-operator"],
   onboarding: false,
   requireConfig: false,
-  gitAuthor: "renovate-bot <renovate-bot[bot]@users.noreply.github.com>",   
+  gitAuthor: "topicuskeyhub-bot <834255464+topicuskeyhub-bot@users.noreply.github.com>",   
   labels: ["dependencies"],
   enabledManagers: ["github-actions", "gomod"],
   packageRules: [
@@ -36,6 +36,10 @@
     {
       "matchUpdateTypes": ["patch"],
       "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["actions"]
     }
   ]
 }
