@@ -12,13 +12,13 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	controllerMetrics "github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	controllerMetrics "github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 
-	controllers_test "github.com/topicusonderwijs/keyhub-vault-operator/controllers/test"
+	controllers_test "github.com/topicuskeyhub/keyhub-vault-operator/controllers/test"
 )
 
 var _ = Describe("KeyHubSecret Controller", func() {

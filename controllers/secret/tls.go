@@ -18,10 +18,10 @@ import (
 	pkcs12 "software.sslmate.com/src/go-pkcs12"
 
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
-	"github.com/topicusonderwijs/keyhub-vault-operator/api"
-	"github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
+	"github.com/topicuskeyhub/keyhub-vault-operator/api"
+	"github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 
