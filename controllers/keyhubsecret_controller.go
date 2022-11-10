@@ -18,11 +18,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/secret"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/secret"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
 )
 
 const (

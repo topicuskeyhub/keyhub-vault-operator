@@ -46,10 +46,10 @@ import (
 
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
 	// +kubebuilder:scaffold:imports
 )
 

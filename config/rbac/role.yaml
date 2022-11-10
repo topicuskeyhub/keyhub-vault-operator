@@ -1,5 +1,3 @@
-
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -32,16 +30,14 @@ rules:
   - get
   - patch
   - update
-- apiGroups:
-  - ""
+- apiGroups: [""]
   resources:
   - namespaces
   verbs:
   - get
   - list
   - watch
-- apiGroups:
-  - ""
+- apiGroups: [""]
   resources:
   - secrets
   verbs:
@@ -52,11 +48,3 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - list
-  - patch
