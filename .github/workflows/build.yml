@@ -4,6 +4,8 @@ on:
   workflow_dispatch: {}
   push:
     branches: [ "main" ]
+    tags:
+      - v**
   pull_request:
     branches: [ "main" ]
 
@@ -14,13 +16,25 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Set build vars
+      id: set-build-vars
+      run: |
+        if [ ${{ github.ref }} == 'refs/heads/main' ]; then
+          echo "RELEASE_VERSION=latest" >> $GITHUB_ENV
+        elif [[ ${{ github.ref }} == refs/tags/* ]]; then
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        else
+          echo "RELEASE_VERSION=dev" >> $GITHUB_ENV
+        fi
+      shell: bash
+
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
         go-version: 1.19
 
     - name: Login to GitHub Container Registry
-      if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/')
+      if: env.RELEASE_VERSION != 'dev'
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
@@ -30,10 +44,10 @@ jobs:
     - name: Build
       run: make docker-build
       env:
-        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:latest
+        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:${RELEASE_VERSION}
 
-    - name: Push to GitHub Container Registry
-      if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/release/')
+    - name: Push image to GitHub Container Registry
+      if: env.RELEASE_VERSION != 'dev'
       run: make docker-push
       env:
-        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:latest
+        IMG: ghcr.io/topicuskeyhub/keyhub-vault-operator:${RELEASE_VERSION}
