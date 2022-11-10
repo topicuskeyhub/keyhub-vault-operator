@@ -14,7 +14,7 @@ import (
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 type comment struct {
