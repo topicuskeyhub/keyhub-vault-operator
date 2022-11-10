@@ -57,6 +57,8 @@ import (
 // http://onsi.github.io/ginkgo/ to learn more about Ginkgo.
 
 var cfg *rest.Config
+var ctx context.Context
+var ctxCancelFn context.CancelFunc
 var k8sClient client.Client
 var testEnv *envtest.Environment
 var policyEngine policy.PolicyEngine
@@ -119,8 +121,9 @@ var _ = BeforeSuite(func() {
 	}).SetupWithManager(k8sManager)
 	Expect(err).ToNot(HaveOccurred())
 
+	ctx, ctxCancelFn = context.WithCancel(ctrl.SetupSignalHandler())
 	go func() {
-		err = k8sManager.Start(ctrl.SetupSignalHandler())
+		err = k8sManager.Start(ctx)
 		Expect(err).ToNot(HaveOccurred())
 	}()
 
@@ -158,6 +161,7 @@ var _ = BeforeSuite(func() {
 
 var _ = AfterSuite(func() {
 	By("tearing down the test environment")
+	ctxCancelFn()
 	err := testEnv.Stop()
 	Expect(err).NotTo(HaveOccurred())
 })
