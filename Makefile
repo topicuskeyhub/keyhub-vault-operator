@@ -120,7 +120,7 @@ run: manifests generate fmt vet ## Run a controller from your host.
 # More info: https://docs.docker.com/develop/develop-images/build_enhancements/
 .PHONY: docker-build
 #docker-build: test ## Build docker image with the manager.
-docker-build: manifests generate fmt vet ## FIXME: run tests on github actions
+docker-build: manifests generate fmt vet test
 	docker build -t ${IMG} .
 
 .PHONY: docker-push
