@@ -1,3 +1,6 @@
+// Copyright 2020 Topicus Security BV
+// SPDX-License-Identifier: Apache-2.0
+
 package vault
 
 import (
@@ -8,7 +11,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 )
 
 type VaultRecordWithGroup struct {

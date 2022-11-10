@@ -1,3 +1,6 @@
+// Copyright 2020 Topicus Security BV
+// SPDX-License-Identifier: Apache-2.0
+
 package policy
 
 import (
@@ -9,8 +12,8 @@ import (
 	"github.com/google/uuid"
 	keyhub "github.com/topicuskeyhub/go-keyhub"
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/metrics"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
 	"gopkg.in/yaml.v2"
 )
 

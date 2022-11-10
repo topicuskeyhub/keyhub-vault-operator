@@ -1,10 +1,14 @@
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/topicuskeyhub/keyhub-vault-operator)
+![Go](https://img.shields.io/github/go-mod/go-version/topicuskeyhub/keyhub-vault-operator)
+![GitHub](https://img.shields.io/github/license/topicuskeyhub/keyhub-vault-operator)
+
 ![Topicus KeyHub](assets/keyhub.png)
 
 # Topicus KeyHub Vault Operator
 Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 
 ## Documentation
-To learn more about using KeyHub as a Kubernetes secret store go to [this article](https://kb.topicus.education/docs/devops/kubernetes/keyhub/) in our Knowledge Base.
+The documentation can be found [here](https://topicuskeyhub.github.io/keyhub-vault-operator/).
 
 ## Getting started
 Run the operator locally. Make sure you are connecting to your local minikube cluster!
@@ -36,7 +40,7 @@ kind: Kustomization
 namespace: keyhub-vault-operator
 
 resources:
-- ssh://github.com/topicusonderwijs/keyhub-vault-operator//config/default?ref=main
+- ssh://github.com/topicuskeyhub/keyhub-vault-operator//config/default?ref=main
 ```
 
 ## Release

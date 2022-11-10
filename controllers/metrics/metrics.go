@@ -1,3 +1,6 @@
+// Copyright 2020 Topicus Security BV
+// SPDX-License-Identifier: Apache-2.0
+
 package metrics
 
 import (

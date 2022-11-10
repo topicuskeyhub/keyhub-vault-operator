@@ -1,10 +1,13 @@
+// Copyright 2020 Topicus Security BV
+// SPDX-License-Identifier: Apache-2.0
+
 package api
 
 import (
 	"encoding/base64"
 
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
-	"github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
 	"golang.org/x/crypto/bcrypt"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

@@ -1,5 +1,5 @@
 /*
-Copyright 2020.
+Copyright 2020 Topicus Security BV
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	keyhubv1alpha1 "github.com/topicusonderwijs/keyhub-vault-operator/api/v1alpha1"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/policy"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/settings"
-	"github.com/topicusonderwijs/keyhub-vault-operator/controllers/vault"
+	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
 	// +kubebuilder:scaffold:imports
 )
 
