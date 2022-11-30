@@ -22,7 +22,7 @@ jobs:
         if [ ${{ github.ref }} == 'refs/heads/main' ]; then
           echo "RELEASE_VERSION=latest" >> $GITHUB_ENV
         elif [[ ${{ github.ref }} == refs/tags/* ]]; then
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
         else
           echo "RELEASE_VERSION=dev" >> $GITHUB_ENV
         fi
