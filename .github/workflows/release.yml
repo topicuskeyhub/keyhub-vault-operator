@@ -21,6 +21,7 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
+          github-token: ""
           git-user-name: ${{ github.repository_owner }}
           git-user-email: "${{ github.repository_owner }}@users.noreply.github.com"
           output-file: "false"
