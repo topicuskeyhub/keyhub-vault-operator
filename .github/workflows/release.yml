@@ -16,7 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          token: ''
           ssh-key: "${{ secrets.RELEASE_KEY }}"
       - name: Create Tag and Changelog
         id: changelog
