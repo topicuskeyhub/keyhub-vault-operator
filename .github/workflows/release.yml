@@ -7,14 +7,14 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setup Tools
         uses: yokawasa/action-setup-kube-tools@v0.9.2
         with:
           setup-tools: |
             kustomize
             yq
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
@@ -46,12 +46,13 @@ jobs:
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
       - name: push
-        uses: github-actions-x/commit@v2.9
+        uses: leigholiver/commit-with-deploy-key@v1.0.3
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          source: config/manager/kustomization.yaml
+          destination_repo: ${{ github.repository }}
+          destination_folder: config/manager
+          deploy_key: ${{ secrets.RELEASE_KEY }}
+          git_username: ${{ github.repository_owner }}
+          git_email: "${{ github.repository_owner }}@users.noreply.github.com" 
           commit-message: "chore(release): prepare for next development iteration"
-          files: config/manager/kustomization.yaml
-          name: ${{ github.repository_owner }}
-          email: "${{ github.repository_owner }}@users.noreply.github.com" 
-      
