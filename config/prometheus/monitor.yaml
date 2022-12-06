@@ -9,8 +9,8 @@ metadata:
   namespace: system
 spec:
   endpoints:
-    - path: /metrics
-      port: https
+    - port: http
+      path: /metrics
   selector:
     matchLabels:
       control-plane: controller-manager
