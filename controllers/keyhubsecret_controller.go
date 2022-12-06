@@ -19,6 +19,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
+	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/metrics"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/policy"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/secret"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/settings"
@@ -39,6 +40,12 @@ type KeyHubSecretReconciler struct {
 	SettingsManager settings.SettingsManager
 	PolicyEngine    policy.PolicyEngine
 	VaultIndexCache vault.VaultIndexCache
+}
+
+func init() {
+	metrics.KeyHubApiRequests.WithLabelValues("group", "list").Add(0)
+	metrics.KeyHubApiRequests.WithLabelValues("vault", "list").Add(0)
+	metrics.KeyHubApiRequests.WithLabelValues("vault", "get").Add(0)
 }
 
 // +kubebuilder:rbac:groups=keyhub.topicus.nl,resources=keyhubsecrets,verbs=get;list;watch;create;update;patch;delete
