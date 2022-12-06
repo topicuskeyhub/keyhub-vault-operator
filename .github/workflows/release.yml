@@ -15,11 +15,12 @@ jobs:
             yq
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ssh-key: "${{ secrets.RELEASE_KEY }}"
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           git-user-name: ${{ github.repository_owner }}
           git-user-email: "${{ github.repository_owner }}@users.noreply.github.com"
           output-file: "false"
@@ -45,14 +46,12 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
-      - name: push
-        uses: leigholiver/commit-with-deploy-key@v1.0.3
+      - name: Push
+        uses: github-actions-x/commit@v2.9
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         with:
-          source: config/manager/kustomization.yaml
-          destination_repo: ${{ github.repository }}
-          destination_folder: config/manager
-          deploy_key: ${{ secrets.RELEASE_KEY }}
-          git_username: ${{ github.repository_owner }}
-          git_email: "${{ github.repository_owner }}@users.noreply.github.com" 
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore(release): prepare for next development iteration"
+          files: config/manager/kustomization.yaml
+          name: ${{ github.repository_owner }}
+          email: "${{ github.repository_owner }}@users.noreply.github.com" 
