@@ -15,8 +15,11 @@ jobs:
             yq
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v2
         with:
-          ssh-key: "${{ secrets.RELEASE_KEY }}"
+          host: github.com
+          private-key: ${{ secrets.RELEASE_KEY }}
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
