@@ -52,12 +52,6 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
-      - name: Push
-        uses: github-actions-x/commit@v2.9
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore(release): prepare for next development iteration"
-          files: config/manager/kustomization.yaml
-          name: ${{ github.repository_owner }}
-          email: "${{ github.repository_owner }}@users.noreply.github.com" 
+          git add ./config/manager/kustomization.yaml
+          git commit -m "chore(release): prepare for next development iteration [skip ci]
+          git push
