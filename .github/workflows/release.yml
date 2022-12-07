@@ -53,5 +53,5 @@ jobs:
         run: |
           yq eval -i '.images[0].newTag = "latest" ' ./config/manager/kustomization.yaml
           git add ./config/manager/kustomization.yaml
-          git commit -m "chore(release): prepare for next development iteration [skip ci]
+          git commit -m "chore(release): prepare for next development iteration [skip ci]"
           git push
