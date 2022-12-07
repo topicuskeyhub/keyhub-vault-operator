@@ -16,12 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          persist-credentials: false
-      - name: Setup SSH
-        uses: MrSquaare/ssh-setup-action@v2
-        with:
-          host: github.com
-          private-key: ${{ secrets.RELEASE_KEY }}
+          ssh-key: ${{ secrets.RELEASE_KEY }}
+      - run: |
+          /usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+          cat .git/config
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
