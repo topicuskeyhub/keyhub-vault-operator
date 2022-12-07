@@ -46,6 +46,9 @@ spec:
             port: 8081
           initialDelaySeconds: 5
           periodSeconds: 10
+        ports:
+        - containerPort: 8080
+          name: http
         resources:
           limits:
             cpu: 100m
