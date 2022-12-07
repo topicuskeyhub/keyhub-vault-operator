@@ -18,15 +18,17 @@ jobs:
         with:
           ssh-key: ${{ secrets.RELEASE_KEY }}
       - run: |
+          cat .git/config
           /usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+          git remote -v
           cat .git/config
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
           github-token: ""
-          git-user-name: ${{ github.repository_owner }}
-          git-user-email: "${{ github.repository_owner }}@users.noreply.github.com"
+          git-user-name: ${{ github.triggering_actor }}
+          git-user-email: "${{ github.triggering_actor }}@users.noreply.github.com"
           output-file: "false"
           pre-commit: ".github/release.js"
           skip-version-file: "true"
