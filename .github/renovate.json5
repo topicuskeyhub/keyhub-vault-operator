@@ -39,7 +39,8 @@
     },
     {
       "matchManagers": ["github-actions"],
-      "labels": ["actions"]
+      "labels": ["actions"],
+      "automerge": true
     }
   ]
 }
