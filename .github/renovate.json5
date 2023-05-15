@@ -17,29 +17,32 @@
   enabledManagers: ["github-actions", "gomod"],
   packageRules: [
     {
-      "matchPackagePatterns": ["^github.com/go-logr/logr"],
-      "allowedVersions": "/^v0\\./"
+      matchPackagePatterns: ["^github.com/go-logr/logr"],
+      allowedVersions: "/^v0\\./"
     },
     {
-      "matchPackagePatterns": ["^k8s.io/client-go"],
-      "allowedVersions": "/^v0\\./"
+      matchPackagePatterns: ["^k8s.io/client-go"],
+      allowedVersions: "/^v0\\./"
     },
     {
-      "groupName": "k8s deps",
-      "matchPackagePatterns": ["^k8s.io/", "^sigs.k8s.io/"]
+      groupName: "k8s deps",
+      matchPackagePatterns: ["^k8s.io/", "^sigs.k8s.io/"]
     },
     {
-      "groupName": "prometheus deps",
-      "matchPackagePatterns": ["^github.com/prometheus/"]
+      groupName: "prometheus deps",
+      matchPackagePatterns: ["^github.com/prometheus/"]
     },
     {
-      "matchUpdateTypes": ["patch"],
-      "automerge": true
+      matchUpdateTypes: ["patch"],
+      automerge: true
     },
     {
-      "matchManagers": ["github-actions"],
-      "labels": ["actions"],
-      "automerge": true
+      matchManagers: ["github-actions"],
+      labels: ["dependencies", "github-actions"],
+      semanticCommitType: "ci",
+      semanticCommitScope: "deps",
+      automerge: true,
+      extends: ["schedule:automergeWeekly"]
     }
   ]
 }
