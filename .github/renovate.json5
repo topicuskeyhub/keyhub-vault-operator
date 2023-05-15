@@ -9,11 +9,11 @@
     ":separatePatchReleases",
   ],
   platform: "github",
-  username: "Renovate Bot for KeyHub",
+  username: "renovate-bot-for-keyhub[bot]",
   repositories: ["topicuskeyhub/keyhub-vault-operator"],
   onboarding: false,
   requireConfig: false,
-  gitAuthor: "topicuskeyhub-bot <834255464+topicuskeyhub-bot@users.noreply.github.com>",   
+  gitAuthor: "Topicus KeyHub Renovate Bot <834255464+renovate-bot-for-keyhub[bot]@users.noreply.github.com>",   
   labels: ["dependencies"],
   enabledManagers: ["github-actions", "gomod"],
   packageRules: [
