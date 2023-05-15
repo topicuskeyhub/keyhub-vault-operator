@@ -4,7 +4,6 @@
     ":enableRenovate",
     "config:base",
     ":disableRateLimiting",
-    ":disableDependencyDashboard",
     ":semanticCommits",
     ":separatePatchReleases",
   ],
