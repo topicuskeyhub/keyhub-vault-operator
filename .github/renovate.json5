@@ -13,7 +13,7 @@
   repositories: ["topicuskeyhub/keyhub-vault-operator"],
   onboarding: false,
   requireConfig: false,
-  gitAuthor: "Topicus KeyHub Renovate Bot <834255464+renovate-bot-for-keyhub[bot]@users.noreply.github.com>",   
+  gitAuthor: "Topicus KeyHub Renovate Bot <111051033+renovate-bot-for-keyhub[bot]@users.noreply.github.com>",   
   labels: ["dependencies"],
   enabledManagers: ["github-actions", "gomod"],
   packageRules: [
