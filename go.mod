@@ -10,7 +10,7 @@ require (
 	github.com/onsi/gomega v1.24.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.14.0
-	github.com/topicuskeyhub/go-keyhub v1.2.0
+	github.com/topicuskeyhub/go-keyhub v1.2.5
 	golang.org/x/crypto v0.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.25.9
