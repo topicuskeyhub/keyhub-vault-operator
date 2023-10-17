@@ -394,6 +394,8 @@ github.com/topicuskeyhub/go-keyhub v1.2.0 h1:8SDs0m4PuswQPNeppJRHuZWmxC6tTYGONpg
 github.com/topicuskeyhub/go-keyhub v1.2.0/go.mod h1:FVrZjmhkNnK9ePlDP8QwAhTny2k//2vQ3o8QfTxEmiI=
 github.com/topicuskeyhub/go-keyhub v1.2.5 h1:3HT7ZILnHFBDEyGDM6rhqOyUcaiwMjkecUCuneoKc9k=
 github.com/topicuskeyhub/go-keyhub v1.2.5/go.mod h1:FVrZjmhkNnK9ePlDP8QwAhTny2k//2vQ3o8QfTxEmiI=
+github.com/topicuskeyhub/go-keyhub v1.3.1 h1:+6xP2pF8OrLezVH0ThIYYBAYIXpW0hEQPNPtCfoqU44=
+github.com/topicuskeyhub/go-keyhub v1.3.1/go.mod h1:czXuuZ0t8lad75DxsauEehIGMD4fGkS7dWgf1MU+aHA=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
