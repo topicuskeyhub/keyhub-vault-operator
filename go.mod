@@ -1,6 +1,8 @@
 module github.com/topicuskeyhub/keyhub-vault-operator
 
-go 1.19
+go 1.21
+
+toolchain go1.21.3
 
 require (
 	github.com/go-logr/logr v1.2.4
@@ -10,7 +12,7 @@ require (
 	github.com/onsi/gomega v1.27.8
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.15.1
-	github.com/topicuskeyhub/go-keyhub v1.2.5
+	github.com/topicuskeyhub/go-keyhub v1.3.1
 	golang.org/x/crypto v0.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.25.14
