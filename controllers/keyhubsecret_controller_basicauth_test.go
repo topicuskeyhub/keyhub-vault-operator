@@ -5,6 +5,7 @@ package controllers
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"strconv"
@@ -151,18 +152,20 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				encKey0 := make([]byte, base64.StdEncoding.EncodedLen(len("admin")))
 				base64.StdEncoding.Encode(encKey0, []byte("admin"))
+				shaKey0 := sha256.Sum256(encKey0)
 
 				encKey1 := make([]byte, base64.StdEncoding.EncodedLen(len("test1234")))
 				base64.StdEncoding.Encode(encKey1, []byte("test1234"))
+				shaKey1 := sha256.Sum256(encKey1)
 
 				return len(records) == 1 &&
 					len(keys) == 2 &&
 					records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password" &&
 					keys[0].Key == "username" &&
-					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey0) == nil &&
+					bcrypt.CompareHashAndPassword(keys[0].Hash, shaKey0[:]) == nil &&
 					keys[1].Key == "password" &&
-					bcrypt.CompareHashAndPassword(keys[1].Hash, encKey1) == nil
+					bcrypt.CompareHashAndPassword(keys[1].Hash, shaKey1[:]) == nil
 			}, timeout, interval).Should(BeTrue())
 			manifestToLog = nil
 
@@ -197,18 +200,20 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				encKey0 := make([]byte, base64.StdEncoding.EncodedLen(len("example.io")))
 				base64.StdEncoding.Encode(encKey0, []byte("example.io"))
+				shaKey0 := sha256.Sum256(encKey0)
 
 				encKey1 := make([]byte, base64.StdEncoding.EncodedLen(len("test5678")))
 				base64.StdEncoding.Encode(encKey1, []byte("test5678"))
+				shaKey1 := sha256.Sum256(encKey1)
 
 				return len(records) == 1 &&
 					len(keys) == 2 &&
 					records[0].RecordID == "00000000-0000-0000-1001-000000000003" &&
 					records[0].Name == "Certificate" &&
 					keys[0].Key == "username" &&
-					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey0) == nil &&
+					bcrypt.CompareHashAndPassword(keys[0].Hash, shaKey0[:]) == nil &&
 					keys[1].Key == "password" &&
-					bcrypt.CompareHashAndPassword(keys[1].Hash, encKey1) == nil
+					bcrypt.CompareHashAndPassword(keys[1].Hash, shaKey1[:]) == nil
 			}, timeout, interval).Should(BeTrue())
 			manifestToLog = nil
 

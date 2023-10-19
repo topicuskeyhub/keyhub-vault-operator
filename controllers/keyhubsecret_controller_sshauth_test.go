@@ -5,6 +5,7 @@ package controllers
 
 import (
 	"context"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"strconv"
@@ -149,13 +150,14 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				encKey := make([]byte, base64.StdEncoding.EncodedLen(len("lorem ipsum")))
 				base64.StdEncoding.Encode(encKey, []byte("lorem ipsum"))
+				shaKey := sha256.Sum256(encKey)
 
 				return len(records) == 1 &&
 					len(keys) == 1 &&
 					records[0].RecordID == "00000000-0000-0000-1001-000000000002" &&
 					records[0].Name == "Username + password" &&
 					keys[0].Key == "ssh-privatekey" &&
-					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey) == nil
+					bcrypt.CompareHashAndPassword(keys[0].Hash, shaKey[:]) == nil
 			}, timeout, interval).Should(BeTrue())
 			manifestToLog = nil
 
@@ -188,13 +190,14 @@ var _ = Describe("KeyHubSecret Controller", func() {
 
 				encKey := make([]byte, base64.StdEncoding.EncodedLen(len("consectetur adipiscing elit")))
 				base64.StdEncoding.Encode(encKey, []byte("consectetur adipiscing elit"))
+				shaKey := sha256.Sum256(encKey)
 
 				return len(records) == 1 &&
 					len(keys) == 1 &&
 					records[0].RecordID == "00000000-0000-0000-1001-000000000008" &&
 					records[0].Name == "key file" &&
 					keys[0].Key == "ssh-privatekey" &&
-					bcrypt.CompareHashAndPassword(keys[0].Hash, encKey) == nil
+					bcrypt.CompareHashAndPassword(keys[0].Hash, shaKey[:]) == nil
 			}, timeout, interval).Should(BeTrue())
 			manifestToLog = nil
 

@@ -4,6 +4,7 @@
 package api
 
 import (
+	"crypto/sha256"
 	"encoding/base64"
 
 	keyhubmodel "github.com/topicuskeyhub/go-keyhub/model"
@@ -75,7 +76,8 @@ func SetSecretKeyStatus(statuses *[]v1alpha1.SecretKeyStatus, key string, value 
 
 	encValue := make([]byte, base64.StdEncoding.EncodedLen(len(value)))
 	base64.StdEncoding.Encode(encValue, value)
-	hash, err := bcrypt.GenerateFromPassword(encValue, bcrypt.DefaultCost)
+	shaValue := sha256.Sum256(encValue)
+	hash, err := bcrypt.GenerateFromPassword(shaValue[:], bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
@@ -120,8 +122,8 @@ func DeleteSecretKeyStatus(statuses []v1alpha1.SecretKeyStatus, keysToRemove map
 func IsSecretKeyChanged(statuses []v1alpha1.SecretKeyStatus, data map[string][]byte, key string) bool {
 	encValue := make([]byte, base64.StdEncoding.EncodedLen(len(data[key])))
 	base64.StdEncoding.Encode(encValue, data[key])
-
+	shaValue := sha256.Sum256(encValue)
 	status := FindSecretKeyStatus(statuses, key)
 
-	return status == nil || bcrypt.CompareHashAndPassword(status.Hash, encValue) != nil
+	return status == nil || bcrypt.CompareHashAndPassword(status.Hash, shaValue[:]) != nil
 }
