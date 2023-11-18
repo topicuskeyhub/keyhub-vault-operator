@@ -15,9 +15,9 @@ require (
 	github.com/topicuskeyhub/go-keyhub v1.3.1
 	golang.org/x/crypto v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/api v0.25.15
-	k8s.io/apimachinery v0.25.15
-	k8s.io/client-go v0.25.15
+	k8s.io/api v0.25.16
+	k8s.io/apimachinery v0.25.16
+	k8s.io/client-go v0.25.16
 	sigs.k8s.io/controller-runtime v0.13.2
 	software.sslmate.com/src/go-pkcs12 v0.2.1
 )
