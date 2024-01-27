@@ -6,7 +6,7 @@ toolchain go1.21.3
 
 require (
 	github.com/go-logr/logr v1.2.4
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.10
