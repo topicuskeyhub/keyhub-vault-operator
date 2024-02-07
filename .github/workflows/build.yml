@@ -4,7 +4,7 @@ on:
   workflow_dispatch: {}
   push:
     branches: [ "main" ]
-    paths-ignore: [ ".github/workflows/release.yml" ]
+    paths-ignore: [ ".github/workflows/release.yml", "docs/**" ]
   pull_request:
     branches: [ "main" ]
 
