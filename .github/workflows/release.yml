@@ -15,7 +15,7 @@ jobs:
       changelog: ${{ steps.changelog.outputs.clean_changelog }}
     steps:
       - name: Setup Tools
-        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        uses: yokawasa/action-setup-kube-tools@v0.10.0
         with:
           setup-tools: |
             yq
@@ -73,7 +73,7 @@ jobs:
     needs: [tag, build]
     steps:
       - name: Setup Tools
-        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        uses: yokawasa/action-setup-kube-tools@v0.10.0
         with:
           setup-tools: |
             kustomize
