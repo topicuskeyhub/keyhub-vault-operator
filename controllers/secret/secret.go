@@ -44,8 +44,6 @@ func (sb *secretBuilder) Build(ks *keyhubv1alpha1.KeyHubSecret, secret *corev1.S
 		secret.Type = corev1.SecretTypeOpaque
 	}
 	switch secret.Type {
-	case corev1.SecretTypeOpaque:
-		return sb.applyOpaqueSecretData(ks, secret)
 	case corev1.SecretTypeBasicAuth:
 		return sb.applyBasicAuthSecretData(ks, secret)
 	case corev1.SecretTypeSSHAuth:
@@ -55,7 +53,7 @@ func (sb *secretBuilder) Build(ks *keyhubv1alpha1.KeyHubSecret, secret *corev1.S
 	case keyhubv1alpha1.SecretTypeApachePasswordFile:
 		return sb.applyApachePasswordFile(ks, secret)
 	default:
-		return fmt.Errorf("Unsupported secret type: %s", secret.Type)
+		return sb.applyOpaqueSecretData(ks, secret)
 	}
 }
 
