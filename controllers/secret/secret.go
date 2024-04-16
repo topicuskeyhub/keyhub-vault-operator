@@ -4,8 +4,6 @@
 package secret
 
 import (
-	"fmt"
-
 	"github.com/go-logr/logr"
 	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
 	"github.com/topicuskeyhub/keyhub-vault-operator/controllers/vault"
