@@ -91,6 +91,22 @@ spec:
   ...
 ```
 
+Some Kubernetes secret `type` values have dedicated support to make working with these types easier, see below for details. If no dedicated support for a type
+has been implemented, the type is handled the same as if the type had been `Opaque`. This means it is possible to construct a wide range of Kubernetes secrets, e.g.:
+```yaml
+apiVersion: keyhub.topicus.nl/v1alpha1
+kind: KeyHubSecret
+metadata:
+  name: docker-registry-auth
+spec:
+  template:
+    type: kubernetes.io/dockerconfigjson
+  data:
+    - name: ".dockerconfigjson"
+      record: "<KeyHub vault record uuid>"
+      property: "file"
+```
+
 ### Basic authentication
 A `kubernetes.io/basic-auth` secret uses the username and password fields from the vault record. E.g.:
 ```yaml
