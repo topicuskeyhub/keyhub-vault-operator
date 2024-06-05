@@ -11,10 +11,13 @@ Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 The documentation can be found [here](https://topicuskeyhub.github.io/keyhub-vault-operator/).
 
 ## Getting started
+You will need Golang version 1.21 or higher.
+
 Run the operator locally. Make sure you are connecting to your local minikube cluster!
 ```
 make run
 ```
+By default the operator will look for a `keyhub-vault-operator-secret` in the `default` namespace.
 
 Run the tests
 ```
