@@ -6,6 +6,7 @@ package policy
 import (
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/go-logr/logr"
 	keyhubv1alpha1 "github.com/topicuskeyhub/keyhub-vault-operator/api/v1alpha1"
@@ -35,6 +36,14 @@ func (r *policyResolver) Resolve(secret *keyhubv1alpha1.KeyHubSecret) (*Policy, 
 		if namespace == policy.Name {
 			r.log.Info("Found exact match", "namespace", namespace, "ClientID", policy.Credentials.ClientID)
 			return &policy, nil
+		} else if policy.NameRegex != "" {
+			found, err := regexp.MatchString(policy.NameRegex, namespace)
+			if err != nil {
+				return nil, err
+			} else if found {
+				r.log.Info("Found match based on regex", "namespace", namespace, "ClientID", policy.Credentials.ClientID)
+				return &policy, nil
+			}
 		} else if policy.LabelSelector != "" {
 			nsl := &corev1.NamespaceList{}
 			ls, err := labels.Parse(policy.LabelSelector)

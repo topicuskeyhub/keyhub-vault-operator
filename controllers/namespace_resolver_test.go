@@ -103,6 +103,34 @@ var _ = Describe("Namespace Policy Resolver", func() {
 		})
 	})
 
+	Context("Name Regex Match", func() {
+		It("Should match the policy by regular expression", func() {
+			ks := &keyhubv1alpha1.KeyHubSecret{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      "sample-ks",
+					Namespace: "default",
+				},
+				Spec: keyhubv1alpha1.KeyHubSecretSpec{
+					Data: []keyhubv1alpha1.SecretKeyReference{
+						{Name: "username", Record: "1001-0002", Property: "username"},
+					},
+				},
+			}
+
+			p := policy.Policy{}
+			p.Type = "namespace"
+			p.NameRegex = "def.*"
+			p.Credentials = policy.ClientCredentials{ClientID: "1357"}
+			policies := []policy.Policy{p}
+
+			resolver := policy.NewNamespacePolicyResolver(k8sClient, logf.Log.WithName("NamespacePolicyResolver"), policies)
+			policy, err := resolver.Resolve(ks)
+			Expect(err).To(BeNil())
+			Expect(policy).ToNot(BeNil())
+			Expect(policy.Credentials.ClientID).To(Equal("1357"))
+		})
+	})
+
 	Context("LabelSelector Match", func() {
 		It("Should find a namespace match", func() {
 			By("By creating a labeled namespace")
