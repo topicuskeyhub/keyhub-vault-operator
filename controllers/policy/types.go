@@ -22,6 +22,7 @@ type ClientCredentials struct {
 type policy struct {
 	Type          string `yaml:"type"`
 	Name          string `yaml:"name,omitempty"`
+	NameRegex     string `yaml:"nameRegex,omitempty"`
 	LabelSelector string `yaml:"labelSelector,omitempty"`
 }
 

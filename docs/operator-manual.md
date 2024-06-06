@@ -59,12 +59,14 @@ The `keyhub-vault-operator-secret` Secret contains the following fields:
 
 ## Policies
 
-A policy defines a mapping between Kubernetes and a KeyHub OAuth2/OIDC application to be used to retrieve vault records. Currently only namespace-based policies defining a name or a label selector are supported, e.g.:
+A policy defines a mapping between Kubernetes and a KeyHub OAuth2/OIDC application to be used to retrieve vault records. Currently only namespace-based policies defining a name (or a regex matching on the name) or a label selector are supported, e.g.:
 
 ```yaml
 policies:
   - type: namespace
     name: default
+  - type: namespace
+    nameRegex: customer-.*
   - type: namespace
     labelSelector: field.cattle.io/projectId=p-xxxxx
 ```
