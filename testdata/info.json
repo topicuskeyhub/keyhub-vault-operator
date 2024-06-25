@@ -1,5 +1,5 @@
 {
   "$type":"simple.VersionInfo",
   "keyHubVersion":"keyhub-0.0-0",
-  "contractVersions": [ 70 ]
+  "contractVersions": [ 71 ]
 }
