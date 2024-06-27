@@ -29,6 +29,7 @@ make test
 - Install [Operator SDK](https://sdk.operatorframework.io/)
 
 ### Git pre-commit hook to check Conventional Commits
+Use conventional commits, even if you skip this optional pre-commit hook.
 - Install [`pre-commit`](https://pre-commit.com/#install)
 - Install `pre-commit` script ([more info](https://github.com/compilerla/conventional-pre-commit)):
   ```console
