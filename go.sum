@@ -311,6 +311,8 @@ github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcU
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/topicuskeyhub/go-keyhub v1.3.4 h1:3XQkCOd0TMdhBmU8uxfIL+So8/Pd6ZE/UOy9l2Ac8co=
 github.com/topicuskeyhub/go-keyhub v1.3.4/go.mod h1:lvdntMwIADSycq6uqS+9VNNWZfMV2iPfFJmIT6Utt1s=
+github.com/topicuskeyhub/go-keyhub v1.3.5 h1:AYq4WbgNsPe1seM6pqpsSX2txXM2aGPP0xjWk/nMDU4=
+github.com/topicuskeyhub/go-keyhub v1.3.5/go.mod h1:KuwHajN+gHQPe991tl7Wt5p89hK7IbsJYZavf6IO2zA=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
