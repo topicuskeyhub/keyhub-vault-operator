@@ -13,7 +13,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.19.1
 	github.com/topicuskeyhub/go-keyhub v1.3.5
-	golang.org/x/crypto v0.25.0
+	golang.org/x/crypto v0.28.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.25.16
 	k8s.io/apimachinery v0.25.16
@@ -75,9 +75,9 @@ require (
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/term v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/term v0.25.0 // indirect
+	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
