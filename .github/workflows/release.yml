@@ -20,7 +20,7 @@ jobs:
           setup-tools: |
             yq
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Create Tag and Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v6
@@ -45,7 +45,7 @@ jobs:
     needs: tag
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: refs/tags/${{ needs.tag.outputs.tag }}
       - name: Set up Go
@@ -78,7 +78,7 @@ jobs:
           setup-tools: |
             kustomize
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: refs/tags/${{ needs.tag.outputs.tag }}
       - name: Create CRDs
