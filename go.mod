@@ -1,8 +1,8 @@
 module github.com/topicuskeyhub/keyhub-vault-operator
 
-go 1.21
+go 1.24.0
 
-toolchain go1.21.13
+toolchain go1.24.12
 
 require (
 	github.com/go-logr/logr v1.4.2
@@ -13,7 +13,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.19.1
 	github.com/topicuskeyhub/go-keyhub v1.3.5
-	golang.org/x/crypto v0.25.0
+	golang.org/x/crypto v0.47.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.25.16
 	k8s.io/apimachinery v0.25.16
@@ -73,13 +73,13 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/term v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/term v0.39.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
-	golang.org/x/tools v0.23.0 // indirect
+	golang.org/x/tools v0.40.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
