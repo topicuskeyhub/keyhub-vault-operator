@@ -2,7 +2,7 @@ module github.com/topicuskeyhub/keyhub-vault-operator
 
 go 1.21
 
-toolchain go1.21.13
+toolchain go1.25.6
 
 require (
 	github.com/go-logr/logr v1.4.2
