@@ -19,7 +19,7 @@ require (
 	k8s.io/apimachinery v0.25.16
 	k8s.io/client-go v0.25.16
 	sigs.k8s.io/controller-runtime v0.13.2
-	software.sslmate.com/src/go-pkcs12 v0.4.0
+	software.sslmate.com/src/go-pkcs12 v0.7.0
 )
 
 require (
