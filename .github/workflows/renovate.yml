@@ -17,7 +17,7 @@ jobs:
           private_key: ${{ secrets.RENOVATE_APP_PEM }}
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Update dependencies
         uses: renovatebot/github-action@8217b3fc286df088d7c27f3255fe8414463bc0fd # v46.1.15
