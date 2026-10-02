@@ -4,6 +4,11 @@
 
 ![Topicus KeyHub](assets/keyhub.png)
 
+> [!CAUTION]
+> EOL: please note that this package `github.com/topicuskeyhub/keyhub-vault-operator` is no longer maintained and considered EOL.
+>
+> If you want to integrate KeyHub into your K8S infrastructure, contact Topicus KeyHub to discuss the options.
+
 # Topicus KeyHub Vault Operator
 Manage Kubernetes Secrets with Topicus KeyHub and the `KeyHubSecret` resource.
 
